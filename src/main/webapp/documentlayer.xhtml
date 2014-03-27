@@ -1,0 +1,317 @@
+<!--
+   ~ This file is part of Advanced Writing App.
+   ~ 
+   ~ Advanced Writing App is free software: you can redistribute it and/or modify
+   ~ it under the terms of the GNU General Public License as published by
+   ~ the Free Software Foundation, either version 3 of the License, or
+   ~ (at your option) any later version.
+   ~
+   ~ Advanced Writing App is distributed in the hope that it will be useful,
+   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   ~ GNU General Public License for more details.
+
+   ~ You should have received a copy of the GNU General Public License
+   ~ along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<!DOCTYPE html>
+<html lang="de"
+      xmlns:jsf="http://java.sun.com/jsf"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:mc="http://java.sun.com/jsf/composite/mycomponents">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/templates/template.xhtml">
+
+            <ui:define name="main-area">
+
+                <div id="documentLayer" class="container">
+
+                        <div id="titleArea" class="area">
+                            <h2><h:outputText value="#{msg.title}"/></h2>
+                            <p><h:outputText value="#{loginControl.paperControl.currentPaper.title}"/></p>
+                            <p>
+                                <h:button class="defaultbutton" value="#{msg.edit}" outcome="titlecreation?faces-redirect=true"/>
+                            </p>
+                        </div>
+
+                        <div id="authorArea" class="area">
+                            <h2><h:outputText value="#{msg.author}"/></h2>
+                            <p>
+                                <h:inputText id="firstName" value="#{loginControl.paperControl.currentPaper.author.firstname}" p:placeholder="#{msg.firstname}">
+                                    <f:validateRegex pattern="[A-Za-zäöüÄÖÜ][A-Za-zäöüÄÖÜ]*"/>
+                                </h:inputText>
+                            </p>
+                            <p><h:message class="validationError" for="firstName" showDetail="true" showSummary="false"/></p>
+                            
+                            <p>
+                                <h:inputText id="lastName" value="#{loginControl.paperControl.currentPaper.author.lastname}" p:placeholder="#{msg.lastname}">
+                                    <f:validateRegex pattern="[A-Za-zäöüÄÖÜ][A-Za-zäöüÄÖÜ]*"/>
+                                </h:inputText>
+                            </p>
+                            <p><h:message class="validationError" for="lastName" showDetail="true" showSummary="false"/></p>
+                            
+                            <p>
+                                <h:inputText id="matNr" value="#{loginControl.paperControl.currentPaper.author.matnr}" p:placeholder="#{msg.matnr}">
+                                    <f:validateRegex pattern="[0-9]+"/>
+                                </h:inputText>
+                            </p>
+                            <p><h:message class="validationError" for="matNr" showDetail="true" showSummary="false"/></p>
+                        </div>
+
+                        <div id="abstractArea" class="area">
+                            <h2><h:outputText value="#{msg.abstractpart}"/></h2>
+                            <p><h:inputTextarea cols="100" rows="10" value="#{loginControl.paperControl.currentPaper.abstractPart}" p:placeholder="..." p:spellcheck="true"/></p>
+                            
+                            <img class="infoBox" src="resources/img/infobox.svg" alt="" onclick="fadetoggle('#abstractInfo');"/>
+                            <div id="abstractInfo" class="info" onclick="fadeoutfunction('#abstractInfo');">
+                                <p>#{msg.abstractinfo}</p>
+                            </div>
+                                
+                        </div>
+
+                        <h:panelGroup layout="block" id="introductionArea" class="area">
+                            <h:panelGroup layout="block" id="introductionArea2">
+                                <h2><h:outputText value="#{msg.introduction}"/></h2>
+
+                                <ol ondragstart="">
+                                    <ui:repeat var="i" value="#{loginControl.paperControl.currentPaper.getSectionChapters('Introduction')}">
+
+                                        <li class="chapterIntroduction" draggable="true"><mc:chapter instance="#{i}"/></li>
+
+                                    </ui:repeat>
+                                </ol>
+                                <p>
+                                    <h:commandButton class="defaultbutton" value="#{msg.addchapter}" action="#{loginControl.paperControl.currentPaper.addChapter('Introduction')}">
+                                        <f:ajax render="introductionArea2 documentForm:script"/>
+                                    </h:commandButton>
+                                </p>
+                            </h:panelGroup>
+                            
+                            <img class="infoBox" src="resources/img/infobox.svg" alt="" onclick="fadetoggle('#introductionInfo');"/>
+                            <div id="introductionInfo" class="info" onclick="fadeoutfunction('#introductionInfo');">
+                                <p>#{msg.introductioninfo}</p>
+                            </div>
+                            
+                        </h:panelGroup>
+
+                        <h:panelGroup layout="block" id="mainpartArea" class="area">
+                            <h:panelGroup layout="block" id="mainpartArea2">
+                                <h2><h:outputText value="#{msg.mainpart}"/></h2>
+
+                                <ol ondragstart="">
+                                    <ui:repeat id="main" var="i" value="#{loginControl.paperControl.currentPaper.getSectionChapters('Mainpart')}">
+
+                                        <li class="chapterMainpart" draggable="true"><mc:chapter instance="#{i}"/></li>
+
+                                    </ui:repeat>
+                                </ol>
+                                <p>
+                                    <h:commandButton class="defaultbutton" value="#{msg.addchapter}" action="#{loginControl.paperControl.currentPaper.addChapter('Mainpart')}">
+                                        <f:ajax render="mainpartArea2 documentForm:script"/>
+                                    </h:commandButton>
+                                </p>
+                            </h:panelGroup>
+                            
+                            <img class="infoBox" src="resources/img/infobox.svg" alt="" onclick="fadetoggle('#mainpartInfo');"/>
+                            <div id="mainpartInfo" class="info" onclick="fadeoutfunction('#mainpartInfo');">
+                                <p>#{msg.mainpartinfo}</p>
+                            </div>
+                            
+                        </h:panelGroup>
+
+                        <h:panelGroup layout="block" id="conclusionArea" class="area">
+                            <h:panelGroup layout="block" id="conclusionArea2">
+                                <h2><h:outputText value="#{msg.conclusion}"/></h2>
+
+                                <ol ondragstart="">
+                                    <ui:repeat rendered="true" var="i" value="#{loginControl.paperControl.currentPaper.getSectionChapters('Conclusion')}" varStatus="loop">
+
+                                        <li class="chapterConclusion" draggable="true"><mc:chapter instance="#{i}"/></li>
+
+                                    </ui:repeat>
+                                </ol>
+                                <p>
+                                    <h:commandButton class="defaultbutton" value="#{msg.addchapter}" action="#{loginControl.paperControl.currentPaper.addChapter('Conclusion')}">
+                                        <f:ajax render="conclusionArea2 documentForm:script"/>
+                                    </h:commandButton>
+                                </p>
+                            </h:panelGroup>
+
+                            <img class="infoBox" src="resources/img/infobox.svg" alt="" onclick="fadetoggle('#conclucionInfo');"/>
+                            <div id="conclucionInfo" class="info" onclick="fadeoutfunction('#conclucionInfo');">
+                                <p>#{msg.conclusioninfo}</p>
+                            </div>
+
+                        </h:panelGroup>
+                    
+                        <h:panelGroup layout="block" id="bibliographyArea" class="area">
+                            <h2><h:outputText value="#{msg.sources}"/></h2>
+                            
+                            <ol>
+                                <ui:repeat var="i" value="#{loginControl.paperControl.author.getSourcesList()}">
+
+                                    <li class="#{i.getSourceType()}"><mc:tinysource title="#{i.title}" year="#{i.getYear()}"/></li>
+
+                                </ui:repeat>    
+                            </ol>
+                            
+                            <p>
+                                <h:panelGroup layout="block" p:id="useBibliography" rendered="#{loginControl.paperControl.author.sources.size() == 0 ? false : true}">
+                                    <h:selectBooleanCheckbox id="useBibliographyCheckbox" p:id="useBibliographyCheckbox" value="#{loginControl.paperControl.currentPaper.useBibliography}"/>
+                                    <h:outputLabel for="useBibliographyCheckbox" p:for="useBibliographyCheckbox" value="#{msg.usebibliography}"/> 
+                                </h:panelGroup>
+                            </p>
+                            
+                            <img class="infoBox" src="resources/img/infobox.svg" alt="" onclick="fadetoggle('#sourcesInfo');"/>
+                            <div id="sourcesInfo" class="info" onclick="fadeoutfunction('#sourcesInfo');">
+                                <p>#{msg.sourcesinfo}</p>
+                            </div>
+                            
+                        </h:panelGroup>
+                        
+                </div>
+                
+                <script type="text/javascript">
+                    //<![CDATA[
+                    
+                    $(document).ready(function() {
+                            $("#abstractInfo").hide();
+                            $("#introductionInfo").hide();
+                            $("#mainpartInfo").hide();
+                            $("#conclucionInfo").hide();
+                            $("#sourcesInfo").hide();
+                    });                   
+                        
+                    //]]>
+                </script>
+                
+                <h:panelGroup layout="block" id="script" class="script">
+                    <script type="text/javascript">
+                        //<![CDATA[
+                        
+                        if (Modernizr.draganddrop) {
+
+                            var dragSrcEl = null;
+
+                            function handleDragStart(e) {
+                              // Target (this) element is the source node.
+                              this.style.opacity = '0.4';
+
+                              dragSrcEl = this;
+
+                              e.dataTransfer.effectAllowed = 'move';
+                              e.dataTransfer.setData('text/html', this.innerHTML);
+
+                            }
+
+                            function handleDragOver(e) {
+                                if (e.preventDefault) {
+                                  e.preventDefault(); // Necessary. Allows us to drop.
+                                }
+
+                                e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+                                return false;
+                            }
+
+                            function handleDragEnter(e) {
+                              // this / e.target is the current hover target.
+                              
+                              if(dragSrcEl.classList.contains('chapterIntroduction') && this.classList.contains('chapterIntroduction')) {
+                                this.classList.add('over');
+                              }
+                              if(dragSrcEl.classList.contains('chapterMainpart') && this.classList.contains('chapterMainpart')) {
+                                this.classList.add('over');
+                              }
+                              if(dragSrcEl.classList.contains('chapterConclusion') && this.classList.contains('chapterConclusion')) {
+                                this.classList.add('over');
+                              }
+
+                            }
+
+                            function handleDragLeave(e) {
+                              this.classList.remove('over');  // this / e.target is previous target element.
+                            }
+
+                            function handleDrop(e) {
+                                // this/e.target is current target element.
+
+                                if (e.stopPropagation) {
+                                  e.stopPropagation(); // Stops some browsers from redirecting.
+                                }
+
+                                // Don't do anything if dropping the same column we're dragging.
+                                if (dragSrcEl != this) {
+                                    
+                                    if((dragSrcEl.classList.contains('chapterIntroduction') && this.classList.contains('chapterIntroduction')) ||
+                                            (dragSrcEl.classList.contains('chapterMainpart') && this.classList.contains('chapterMainpart')) ||
+                                            (dragSrcEl.classList.contains('chapterConclusion') && this.classList.contains('chapterConclusion'))) {
+                                        
+                                        // write posNr into jsf-model
+                                        var myInputArray1 = this.getElementsByTagName("INPUT");
+                                        var myInputArray2 = dragSrcEl.getElementsByTagName("INPUT");
+
+                                        var valuetemp1 = myInputArray1[2].value;  // this.posNr
+                                        var valuetemp2 = myInputArray2[2].value;  // src.posNr
+
+                                        // Set the source column's HTML to the HTML of the columnwe dropped on.
+                                        dragSrcEl.innerHTML = this.innerHTML;
+                                        this.innerHTML = e.dataTransfer.getData('text/html');
+
+                                        //handle right positioning
+                                        setposnr(myInputArray2[2].id, valuetemp2);
+                                        setposnr(myInputArray1[2].id, valuetemp1);
+                                    
+                                    }
+                                }
+
+                                this.classList.remove('over');
+                                this.style.opacity = '1';
+                                dragSrcEl.style.opacity = '1';
+
+                                return false;
+                            }
+
+                            function handleDragEnd(e) {
+                            // this/e.target is the source node.
+
+                                [].forEach.call(cols, function (col) {
+                                  col.classList.remove('over');
+                                });
+                                this.style.opacity = '1';
+                            }
+
+
+                            var cols = document.querySelectorAll('.chapterIntroduction, .chapterMainpart, .chapterConclusion');
+
+                            [].forEach.call(cols, function(col) {
+                            col.addEventListener('dragstart', handleDragStart, false);
+                            col.addEventListener('dragenter', handleDragEnter, false)
+                            col.addEventListener('dragover', handleDragOver, false);
+                            col.addEventListener('dragleave', handleDragLeave, false);
+                            col.addEventListener('drop', handleDrop, false);
+                            col.addEventListener('dragend', handleDragEnd, false);
+                          });
+                        } else {
+                            // your browser does not support html5 - drag and drop
+                            // use alternative libraries (e.g. jQuery) for handling dnd
+                        }
+                        //]]>
+                    </script>
+                </h:panelGroup>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+
+
+</html>
+

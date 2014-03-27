@@ -1,0 +1,92 @@
+<!--
+   ~ This file is part of Advanced Writing App.
+   ~ 
+   ~ Advanced Writing App is free software: you can redistribute it and/or modify
+   ~ it under the terms of the GNU General Public License as published by
+   ~ the Free Software Foundation, either version 3 of the License, or
+   ~ (at your option) any later version.
+   ~
+   ~ Advanced Writing App is distributed in the hope that it will be useful,
+   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   ~ GNU General Public License for more details.
+
+   ~ You should have received a copy of the GNU General Public License
+   ~ along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<!DOCTYPE html>
+<html lang="de"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <!-- INTERFACE -->
+    <composite:interface>
+        <composite:attribute name="instance" type="at.model.ChapterContent" required="true"/>
+    </composite:interface>
+
+    <!-- IMPLEMENTATION -->
+    <composite:implementation>
+
+            <p>
+                <span class="#{cc.attrs.instance.isParagraph() ? 'paragraphTitle' : 'graphicTitle'}"><h:outputText value="#{cc.attrs.instance.title}" rendered="#{!loginControl.paperControl.currentPaper.currentChapter.isChapterContentsContentShown(cc.attrs.instance.title)}"/></span>
+                <h:inputText id="chapterContentTitle" p:id="#{cc.attrs.instance.isParagraph() ? 'paragraphTitleInput' : 'graphicTitleInput'}" value="#{cc.attrs.instance.title}" rendered="#{loginControl.paperControl.currentPaper.currentChapter.isChapterContentsContentShown(cc.attrs.instance.title)}" p:placeholder="#{cc.attrs.instance.title}" p:autofocus="true"/>
+                
+                <h:commandButton styleClass="deletebutton" value="x" action="#{loginControl.paperControl.currentPaper.currentChapter.removeChapterContent(cc.attrs.instance.title)}">
+                    <f:ajax execute="chapterForm" render="chapterForm chapterForm:script"/>
+                </h:commandButton>
+            
+                <h:commandButton styleClass="editbutton" value="#{msg.edit}" action="*" rendered="#{cc.attrs.instance.isParagraph()}">
+                    <f:ajax execute="chapterForm:chapterTitleInput chapterContentTitle content" listener="#{cc.attrs.instance.toggleContent()}" render="chapterForm chapterForm:script"/>
+                </h:commandButton>
+                
+                <h:commandButton styleClass="editbutton" value="#{msg.edit}" action="*" rendered="#{!cc.attrs.instance.isParagraph()}">
+                    <f:ajax execute="chapterForm:chapterTitleInput chapterContentTitle" listener="#{cc.attrs.instance.toggleContent()}" render="chapterForm chapterForm:script"/>
+                </h:commandButton>
+                
+                <span><h:inputText id="hiddenPosNr" class="hidden" value="#{cc.attrs.instance.chapterContentPosNr}"/></span>
+                            
+            </p>
+             
+            <h:panelGroup layout="block" rendered="#{loginControl.paperControl.currentPaper.currentChapter.isChapterContentsContentShown(cc.attrs.instance.title)}">
+                
+                <h:panelGroup layout="block" id="paragraphContent" p:id="paragraphContent" rendered="#{cc.attrs.instance.isParagraph()}">
+                    <hr/>
+                    <p><h:inputTextarea id="content" cols="95" rows="10" value="#{cc.attrs.instance.content}" p:placeholder="..." p:spellcheck="true"/></p>
+                </h:panelGroup>
+                
+                <h:panelGroup layout="block" id="graphicContent" p:id="graphicContent" rendered="#{!cc.attrs.instance.isParagraph()}">
+                    <hr/>
+
+                    <h:panelGroup id="imgArea" p:id="imgArea" layout="block">
+                        
+                        <h:inputFile id="file" value="#{cc.attrs.instance.file}">
+                            <f:validator validatorId="FileValidator"/>
+                            <f:ajax execute="chapterForm"/>
+                        </h:inputFile>
+                        <h:commandButton p:id="uploadGraphicButton" class="defaultbutton" value="Graphik hinzufügen" action="#{loginControl.paperControl.saveAll()}">
+                            <f:ajax execute="chapterForm" render="chapterForm chapterForm:script"/>
+                        </h:commandButton>
+
+                        <p><h:message id="errorMessage" class="validationError" for="file" showDetail="true"/></p>
+
+                        <h:panelGroup p:id="graphicImage" id="imgTags" layout="block" rendered="#{cc.attrs.instance.file == null ? false : true}">
+                            <h:graphicImage width="#{cc.attrs.instance.getCalcWidthAsString()}" value="image?matnr=#{loginControl.author.matnr}&amp;papertitle=#{loginControl.paperControl.currentPaper.title}&amp;graphictitle=#{cc.attrs.instance.title}"/>
+                            <br/>
+                            <span class="imgTags"><h:outputText value="#{msg.height}: "/><h:outputText value="#{cc.attrs.instance.getHeightAsString()}px"/></span><span class="imgTags"><h:outputText value="#{msg.width}: "/><h:outputText value="#{cc.attrs.instance.getWidthAsString()}px"/></span>
+                            <br/>
+                            <br/>
+                            <span class="imgTags"><h:outputText value="#{msg.filetype}: "/><h:outputText value="#{cc.attrs.instance.type}"/></span>
+                        </h:panelGroup>
+                    </h:panelGroup>
+                    
+                </h:panelGroup>
+
+            </h:panelGroup>
+            
+    </composite:implementation>
+
+</html>

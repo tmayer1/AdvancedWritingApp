@@ -1,0 +1,42 @@
+<!--
+   ~ This file is part of Advanced Writing App.
+   ~ 
+   ~ Advanced Writing App is free software: you can redistribute it and/or modify
+   ~ it under the terms of the GNU General Public License as published by
+   ~ the Free Software Foundation, either version 3 of the License, or
+   ~ (at your option) any later version.
+   ~
+   ~ Advanced Writing App is distributed in the hope that it will be useful,
+   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   ~ GNU General Public License for more details.
+
+   ~ You should have received a copy of the GNU General Public License
+   ~ along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<!DOCTYPE html>
+<html lang="de"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <!-- INTERFACE -->
+    <composite:interface>
+        <composite:attribute name="title" required="true"/>
+        <composite:attribute name="year" required="true"/>
+    </composite:interface>
+
+    <!-- IMPLEMENTATION -->
+    <composite:implementation>
+
+            <p>
+                <span class="sourceTitle"><h:outputText value="#{cc.attrs.title}"/></span>  
+                <span class="sourceYear"><h:outputText value="#{cc.attrs.year}"/></span>  
+            </p>
+            
+    </composite:implementation>
+
+</html>

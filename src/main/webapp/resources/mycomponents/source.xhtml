@@ -1,0 +1,150 @@
+<!--
+   ~ This file is part of Advanced Writing App.
+   ~ 
+   ~ Advanced Writing App is free software: you can redistribute it and/or modify
+   ~ it under the terms of the GNU General Public License as published by
+   ~ the Free Software Foundation, either version 3 of the License, or
+   ~ (at your option) any later version.
+   ~
+   ~ Advanced Writing App is distributed in the hope that it will be useful,
+   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   ~ GNU General Public License for more details.
+
+   ~ You should have received a copy of the GNU General Public License
+   ~ along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<!DOCTYPE html>
+<html lang="de"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:composite="http://java.sun.com/jsf/composite"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+    <!-- INTERFACE -->
+    <composite:interface>
+        <composite:attribute name="title" required="true"/>
+        <composite:attribute name="instance" type="at.model.Source" required="true"/>
+    </composite:interface>
+
+    <!-- IMPLEMENTATION -->
+    <composite:implementation>
+
+            <p>
+                <span class="sourceTitle"><h:outputText value="#{cc.attrs.title}" rendered="#{!loginControl.paperControl.author.isSourceContentShown(cc.attrs.title)}"/></span>
+                <h:inputText id="sourceTitleInput" p:id="sourceTitleInput" value="#{cc.attrs.title}" rendered="#{loginControl.paperControl.author.isSourceContentShown(cc.attrs.title)}" p:placeholder="#{cc.attrs.instance.title}" p:autofocus="true"/>
+                
+                <h:commandButton styleClass="deletebutton" value="x" action="#{loginControl.paperControl.author.removeSource(cc.attrs.title)}">
+                    <f:ajax render="sourceForm sourceForm:script"/>
+                </h:commandButton>
+            
+                <h:commandButton styleClass="editbutton" value="#{msg.edit}" action="*">
+                    <f:ajax execute="sourceForm" listener="#{cc.attrs.instance.toggleContent()}" render="sourceForm sourceForm:script"/>
+                </h:commandButton>
+                            
+            </p>
+             
+            <h:panelGroup id="sourceContent" layout="block" rendered="#{loginControl.paperControl.author.isSourceContentShown(cc.attrs.title)}">
+                
+                <h:panelGroup layout="block" id="bookContent" p:id="bookContent" rendered="#{cc.attrs.instance.getSourceType() == 'book' ? true : false}">
+                    <hr/>
+                    <fieldset>
+                        <table>
+                            <tr>
+                              <td><h:outputLabel for="bookAuthors" value="* #{msg.authors}:"/></td>
+                              <td><h:inputText class="authors" id="bookAuthors" value="#{cc.attrs.instance.authorNames}" p:placeholder="Autor1-Vorname Autor1-Nachname, Author2-Vorname Author2-Nachname, ..." p:required="required"/></td>
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="bookPublisher" value="* #{msg.publisher}:"/></td>
+                              <td><h:inputText class="publisher" id="bookPublisher" value="#{cc.attrs.instance.publisher}" p:placeholder="z.B. Suhrkamp, Walter de Gruyter, ..." p:required="required"/></td> 
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="bookPublisherAddress" value="#{msg.address}:"/></td>
+                              <td><h:inputText class="address" id="bookPublisherAddress" value="#{cc.attrs.instance.address}" p:placeholder="z.B. Frankfurt am Main, New York, ..."/></td> 
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="bookYear" value="* #{msg.year}:"/></td>
+                              <td><h:inputText class="year" id="bookYear" p:type="number" p:min="1000" p:max="2014" p:step="1" value="#{cc.attrs.instance.year}" p:placeholder="z.B. 2013" p:required="required"/></td> 
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="bookEdition" value="#{msg.edition}:"/></td>
+                              <td><h:inputText class="edition" id="bookEdition" value="#{cc.attrs.instance.edition}" p:placeholder="z.B. 1. Aufl."/></td> 
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="bookSeries" value="#{msg.series}:"/></td>
+                              <td><h:inputText class="series" id="bookSeries" value="#{cc.attrs.instance.series}" p:placeholder="z.B. suhrkamp taschenbuch wissenschaft 1142"/></td> 
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="bookNote" value="#{msg.note}:"/></td>
+                              <td><h:inputText class="note" id="bookNote" value="#{cc.attrs.instance.note}" p:placeholder="eine optionale Notiz"/></td> 
+                            </tr>
+                        </table>
+                        <!--<p><h:outputLabel for="isbn" value="#{msg.isbn}:"/><h:inputText id="isbn" value="" p:placeholder="z.B. 978-3-518-45597-5"/></p>-->
+                    </fieldset>
+                    
+                </h:panelGroup>
+                
+                <h:panelGroup layout="block" id="thesisContent" p:id="thesisContent" rendered="#{cc.attrs.instance.getSourceType() == 'thesis' ? true : false}">
+                    <hr/>
+                    <fieldset>
+
+                        <h:selectOneMenu class="thesisType" value="#{cc.attrs.instance.thesisType}">
+                            <f:selectItem itemValue="mastersthesis" itemLabel="#{msg.mastersthesis}" />
+                            <f:selectItem itemValue="phdthesis" itemLabel="#{msg.phdthesis}" />
+                            <f:ajax event="change" execute="@this"/>
+                        </h:selectOneMenu>
+
+                        <table>
+                            <tr>
+                              <td><h:outputLabel for="thesisAuthors" value="* #{msg.authors}:"/></td>
+                              <td><h:inputText class="authors" id="thesisAuthors" value="#{cc.attrs.instance.authorNames}" p:placeholder="Autor1-Vorname Autor1-Nachname, Author2-Vorname Author2-Nachname, ..." p:required="required"/></td> 
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="thesisSchool" value="* #{msg.school}:"/></td>
+                              <td><h:inputText class="school" id="thesisSchool" value="#{cc.attrs.instance.school}" p:placeholder="z.B. FernUniversität Hagen, Fachbereich Informatik" p:required="required"/></td> 
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="thesisYear" value="* #{msg.year}:"/></td>
+                              <td><h:inputText class="year" id="thesisYear" p:type="number" p:min="1000" p:max="2014" p:step="1" value="#{cc.attrs.instance.year}" p:placeholder="z.B. 2013" p:required="required"/></td>
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="thesisNote" value="#{msg.note}:"/></td>
+                              <td><h:inputText class="note" id="thesisNote" value="#{cc.attrs.instance.note}" p:placeholder="eine optionale Notiz"/></td> 
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                </h:panelGroup>
+                
+                <h:panelGroup layout="block" id="miscContent" p:id="miscContent" rendered="#{cc.attrs.instance.getSourceType() == 'misc' ? true : false}">
+                    <hr/>
+                    <fieldset>
+                        <table>
+                            <tr>
+                              <td><h:outputLabel for="miscAuthors" value="#{msg.authors}:"/></td>
+                              <td><h:inputText class="authors" id="miscAuthors" value="#{cc.attrs.instance.authorNames}" p:placeholder="Autor1-Vorname Autor1-Nachname, Author2-Vorname Author2-Nachname, ..."/></td> 
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="miscHowpublished" value="#{msg.howpublished}:"/></td>
+                              <td><h:inputText class="howpublished" id="miscHowpublished" p:type="url" value="#{cc.attrs.instance.howPublished}" p:placeholder="http://www.xxx.com"/></td> 
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="miscYear" value="#{msg.year}:"/></td>
+                              <td><h:inputText class="year" id="miscYear" p:type="number" p:min="1000" p:max="2014" p:step="1" value="#{cc.attrs.instance.year}" p:placeholder="z.B. 2013"/></td> 
+                            </tr>
+                            <tr>
+                              <td><h:outputLabel for="miscNote" value="#{msg.note}:"/></td>
+                              <td><h:inputText class="note" id="miscNote" value="#{cc.attrs.instance.note}" p:placeholder="eine optionale Notiz"/></td> 
+                            </tr>
+                        </table>
+                    </fieldset>
+                    
+                </h:panelGroup>
+                
+            </h:panelGroup>
+            
+    </composite:implementation>
+
+</html>

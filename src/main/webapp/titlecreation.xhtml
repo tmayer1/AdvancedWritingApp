@@ -1,0 +1,85 @@
+<!--
+   ~ This file is part of Advanced Writing App.
+   ~ 
+   ~ Advanced Writing App is free software: you can redistribute it and/or modify
+   ~ it under the terms of the GNU General Public License as published by
+   ~ the Free Software Foundation, either version 3 of the License, or
+   ~ (at your option) any later version.
+   ~
+   ~ Advanced Writing App is distributed in the hope that it will be useful,
+   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   ~ GNU General Public License for more details.
+
+   ~ You should have received a copy of the GNU General Public License
+   ~ along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<!DOCTYPE html>
+<html lang="de"
+      xmlns:jsf="http://java.sun.com/jsf"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:mc="http://java.sun.com/jsf/composite/mycomponents">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/templates/template.xhtml">
+
+            <ui:define name="main-area">
+
+                <div id="titleCreation" class="container">
+
+                        <div id="keywords" class="area">
+                            <h2><h:outputLabel for="titleKeywords" p:for="titleKeywords" value="#{msg.keywords}"/></h2>
+                                <p><h:inputTextarea id="titleKeywords" p:id="titleKeywords" cols="80" rows="6" value="" p:placeholder="..." disabled="true"/></p>
+                            <p><a class="defaultbutton" href="#">#{msg.generate}</a></p>
+                        </div>
+                        
+                        <div id="titleSuggestions" class="area">
+                            <h2><h:outputText value="#{msg.titlesuggestions}"/></h2>
+
+                            <ol ondragstart="">
+                                
+                                <li class="titleSuggestion"><mc:titlesuggestion name="»Globale Beleuchtung in der Computergraphik«"/></li>
+                                <li class="titleSuggestion"><mc:titlesuggestion name="»Globale Sichtbarkeitsalgorithmen«"/></li>
+                
+                                <!--<ui:repeat var="i" value="">
+
+                                    <li class="chapter" draggable="true"><mc:chapter name="#{i.title}" context="#{i.section}"/></li>
+
+                                </ui:repeat>-->
+                            </ol>
+                        </div>
+                    
+                    <div id="paperLang" class="area">
+                        <h2><h:outputText value="#{msg.chooselang}"/></h2>
+                        
+                        <h:selectOneMenu class="paperLangClass" value="#{loginControl.paperControl.currentPaper.lang}">
+                            <f:selectItem itemValue="ngerman" itemLabel="Deutsch (de)" />
+                            <f:selectItem itemValue="english" itemLabel="English (en)" />
+                            <f:ajax event="change" execute="@this"/>
+                        </h:selectOneMenu>
+                    </div>
+
+                        <div id="finalTitle" class="area">
+                            <h2><h:outputLabel for="paperTitleInput" p:for="paperTitleInput" value="#{msg.finaltitle}"/></h2>
+                            <p>
+                                <h:inputText id="paperTitleInput" p:id="paperTitleInput" p:required="true" value="#{loginControl.paperControl.currentPaper.title}"/>
+                            </p>
+                            <p><h:commandButton class="defaultbutton" value="#{msg.accept}" action="#{loginControl.paperControl.savePaperTitle()}"/></p>
+                        </div>
+ 
+                </div>
+
+            </ui:define>
+
+        </ui:composition>
+
+</body>
+
+
+</html>
+

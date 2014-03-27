@@ -1,0 +1,185 @@
+% $Id: INF_Diplomarbeit_example.tex 2733 2010-12-19 07:15:44Z tkren $
+%
+% TU Wien - Faculty of Informatics
+% thesis template
+%
+% This template is using the memoir document class, see
+% <http://www.ctan.org/tex-archive/macros/latex/contrib/memoir/memman.pdf>
+% <http://www.ctan.org/info/latex-samples/MemoirChapStyles/MemoirChapStyles.pdf>
+%
+% For questions and comments send an email to
+% Thomas Krennwallner <tkren@kr.tuwien.ac.at>
+%
+
+								
+\documentclass[a4paper,11pt]{memoir}
+\chapterstyle{veelo}
+
+\usepackage{TUINFDA}
+
+\thesistitle{$title}
+\thesisdate{$date}
+
+
+\thesisauthor{$author}
+\thesismatrikelno{$matNr}
+
+%bibTex
+\usepackage{natbib}
+
+%lang
+\usepackage[$lang]{babel}
+
+% nice tables
+\usepackage{booktabs}
+
+% colored tables
+\usepackage{colortbl}
+
+% TikZ ist kein Zeichenprogramm
+\usepackage{tikz}
+\usepgflibrary{shapes.geometric} % LATEX and plain TEX and pure pgf 
+\usetikzlibrary{shapes.geometric} % LATEX and plain TEX when using TikZ 
+
+% run makeglossaries after the compilation
+\usepackage{glossaries}
+\makeglossaries
+
+\newglossaryentry{citation}{name={Citation},%
+  description={a reference to a publication. (See also \gls{reference})}%
+}
+
+\newglossaryentry{reference}{name={Reference},%
+  description={citing a publication. (See also \gls{citation})}%
+}
+
+% run makeindex after the compilation
+\usepackage{makeidx}
+\makeindex
+
+% this can be removed once all \lipsum commands are gone
+\usepackage{lipsum}
+
+% should be the last package
+\usepackage{hyperref}
+
+\begin{document}
+
+\nouppercaseheads
+
+%lang
+\selectlanguage{\\$lang}
+
+% the front matter starts
+\frontmatter
+
+%
+% titlepages
+%
+\include{titlepage}
+ 
+%
+% declaration
+%
+\include{declaration}
+
+
+%
+% abstract
+%
+\abstractintoc
+
+\begin{abstract}
+  $abstract
+\end{abstract}
+
+\cleardoublepage
+
+\makeatletter
+\@openrighttrue % open on right pages
+\makeatother
+
+
+%
+% table of contents, figures and tables
+%
+\tableofcontents
+%
+% for the list of XXX, we don't want pages to open right
+%\makeatletter
+%\@openrightfalse % open on next page
+%\makeatother
+%
+\listoffigures
+%
+\listoftables
+%
+%\listofalgorithms
+%
+
+
+%
+% start of the thesis
+%
+\mainmatter
+
+
+\part{Start}
+
+$introductionChapters
+
+
+
+\part{Middle}
+
+$mainpartChapters
+
+
+
+\part{End}
+
+$clonclusionChapters
+
+
+
+%
+% appendix
+%
+\appendix
+
+
+\chapter{Proofs}
+\lipsum
+
+
+
+%
+% bibliography
+%
+\bibliographystyle{alpha}
+\newpage
+\nocite{*}
+\bibliography{literature}{}
+
+
+%
+% add a glossary
+%
+\printglossary
+
+%
+% add index right after the bibliography
+%
+\printindex
+
+
+\end{document}
+
+%%% Local Variables:
+%%% TeX-PDF-mode: t
+%%% TeX-debug-bad-boxes: t
+%%% TeX-master: t
+%%% TeX-parse-self: t
+%%% TeX-auto-save: t
+%%% reftex-plug-into-AUCTeX: t
+%%% End:

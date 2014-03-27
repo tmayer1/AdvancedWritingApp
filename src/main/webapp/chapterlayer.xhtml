@@ -1,0 +1,187 @@
+<!--
+   ~ This file is part of Advanced Writing App.
+   ~ 
+   ~ Advanced Writing App is free software: you can redistribute it and/or modify
+   ~ it under the terms of the GNU General Public License as published by
+   ~ the Free Software Foundation, either version 3 of the License, or
+   ~ (at your option) any later version.
+   ~
+   ~ Advanced Writing App is distributed in the hope that it will be useful,
+   ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+   ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   ~ GNU General Public License for more details.
+
+   ~ You should have received a copy of the GNU General Public License
+   ~ along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<!DOCTYPE html>
+<html lang="de"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:mc="http://java.sun.com/jsf/composite/mycomponents">
+
+    <body>
+
+        <ui:composition template="/WEB-INF/templates/template.xhtml">
+
+            <ui:define name="main-area">
+
+                <div id="chapterLayer" class="container">
+
+                        <h:panelGroup layout="block" id="captionArea" class="area">
+                            <h2><h:outputLabel p:for="chapterTitleInput" value="#{msg.caption}"/></h2>
+                            <p><h:inputText id="chapterTitleInput" p:id="chapterTitleInput" p:required="true" value="#{loginControl.paperControl.currentPaper.currentChapter.title}"/></p>
+                        </h:panelGroup>
+
+
+                        <h:panelGroup layout="block" id="paragraphArea" class="area">
+                            <h2><h:outputText value="#{msg.paragraphs}"/></h2>
+
+                            <ol ondragstart="">
+                                <ui:repeat id="chapterContents" var="i" value="#{loginControl.paperControl.currentPaper.currentChapter.chapterContent}">
+
+                                    <li class="#{i.isParagraph() ? 'paragraph' : 'graphic'}" draggable="true"><mc:chaptercontent id="chaptercontent" instance="#{i}"/></li>
+
+                                </ui:repeat>
+                                    
+                            </ol>
+                            <p>
+                                <h:commandButton class="addParagraphButton" value="#{msg.addparagraph}" action="#{loginControl.paperControl.currentPaper.currentChapter.addParagraph()}">
+                                    <f:ajax execute="chapterForm" render="paragraphArea script"/>
+                                </h:commandButton>
+                            
+                                <h:commandButton class="addGraphicButton" value="#{msg.addgraphic}" action="#{loginControl.paperControl.currentPaper.currentChapter.addGraphic()}">
+                                    <f:ajax execute="chapterForm" render="paragraphArea script"/>
+                                </h:commandButton>
+                            </p>
+                        </h:panelGroup>
+
+                </div>
+                
+                <h:panelGroup layout="block" id="script" class="script">
+                    <script type="text/javascript">
+                        //<![CDATA[
+                        if (Modernizr.draganddrop) {
+
+                            var dragSrcEl = null;
+
+                            function handleDragStart(e) {
+                              // Target (this) element is the source node.
+                              this.style.opacity = '0.4';
+
+                              dragSrcEl = this;
+
+                              e.dataTransfer.effectAllowed = 'move';
+                              e.dataTransfer.setData('text/html', this.innerHTML);
+
+                            }
+
+                            function handleDragOver(e) {
+                                if (e.preventDefault) {
+                                  e.preventDefault(); // Necessary. Allows us to drop.
+                                }
+
+                                e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+                                return false;
+                            }
+
+                            function handleDragEnter(e) {
+                              // this / e.target is the current hover target.
+                              this.classList.add('over');
+                            }
+
+                            function handleDragLeave(e) {
+                              this.classList.remove('over');  // this / e.target is previous target element.
+                            }
+
+                            function handleDrop(e) {
+                                // this/e.target is current target element.
+
+                                if (e.stopPropagation) {
+                                  e.stopPropagation(); // Stops some browsers from redirecting.
+                                }
+
+                                // Don't do anything if dropping the same column we're dragging.
+                                if (dragSrcEl != this) {
+                                                                      
+                                    // write posNr into jsf-model
+                                    var myInputArray1 = this.getElementsByTagName("INPUT");
+                                    var myInputArray2 = dragSrcEl.getElementsByTagName("INPUT");
+                                  
+                                    var valuetemp1 = myInputArray1[2].value;  // this.posNr
+                                    var valuetemp2 = myInputArray2[2].value;  // src.posNr
+                                    
+                                    // Set the source column's HTML to the HTML of the columnwe dropped on.
+                                    dragSrcEl.innerHTML = this.innerHTML;
+                                    this.innerHTML = e.dataTransfer.getData('text/html');
+                                  
+                                    //handle right positioning
+                                    setposnr(myInputArray2[2].id, valuetemp2);
+                                    setposnr(myInputArray1[2].id, valuetemp1);
+                                  
+                                  
+                                  if(dragSrcEl.classList.contains('paragraph') && this.classList.contains('graphic')) {
+                                      dragSrcEl.classList.remove('paragraph');
+                                      dragSrcEl.classList.add('graphic');
+                                      this.classList.remove('graphic');
+                                      this.classList.add('paragraph');
+                                  }
+                                  else {
+                                    if(dragSrcEl.classList.contains('graphic') && this.classList.contains('paragraph')) {
+                                        dragSrcEl.classList.remove('graphic');
+                                        dragSrcEl.classList.add('paragraph');
+                                        this.classList.remove('paragraph');
+                                        this.classList.add('graphic');
+                                    }
+                                  }
+                                }
+                                
+                                this.classList.remove('over');
+                                this.style.opacity = '1';
+                                dragSrcEl.style.opacity = '1';
+
+                                return false;
+                            }
+
+                            function handleDragEnd(e) {
+                            // this/e.target is the source node.
+
+                                [].forEach.call(cols, function (col) {
+                                  col.classList.remove('over');
+                                });
+                                this.style.opacity = '1';
+                            }
+
+
+                          var cols = document.querySelectorAll('.paragraph, .graphic');
+
+                            [].forEach.call(cols, function(col) {
+                            col.addEventListener('dragstart', handleDragStart, false);
+                            col.addEventListener('dragenter', handleDragEnter, false);
+                            col.addEventListener('dragover', handleDragOver, false);
+                            col.addEventListener('dragleave', handleDragLeave, false);
+                            col.addEventListener('drop', handleDrop, false);
+                            col.addEventListener('dragend', handleDragEnd, false);
+                          });
+                        } else {
+                            // your browser does not support html5 - drag and drop
+                            // use alternative libraries (e.g. jQuery) for handling dnd
+                        }
+                        //]]>
+                    </script>
+                </h:panelGroup>
+
+            </ui:define>
+
+        </ui:composition>
+
+</body>
+
+
+</html>
+
