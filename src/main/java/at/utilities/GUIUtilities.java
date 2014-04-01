@@ -331,7 +331,7 @@ public class GUIUtilities {
             OutputStream output = ec.getResponseOutputStream();
                         
             ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-            String realPath = servletContext.getRealPath("/");
+            String realPath = servletContext.getRealPath(File.separator);
                 
             //pack folder
             Utilities.createZipfileFromFolder(fileName, realPath);
@@ -340,7 +340,7 @@ public class GUIUtilities {
             OutputStream output2 = null;
 
             try {
-                input = new BufferedInputStream(new FileInputStream(realPath + "/zipFile.zip"));
+                input = new BufferedInputStream(new FileInputStream(realPath + File.separator + "zipFile.zip"));
                 output2 = new BufferedOutputStream(output);
                 byte[] buffer = new byte[8192];
 
@@ -372,7 +372,7 @@ public class GUIUtilities {
                 }
             }
             
-            File file = new File(realPath + "/zipFile.zip");
+            File file = new File(realPath + File.separator + "zipFile.zip");
 
             if (file.exists()) {
                 file.delete();

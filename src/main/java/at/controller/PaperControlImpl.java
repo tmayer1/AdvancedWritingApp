@@ -80,7 +80,7 @@ public class PaperControlImpl implements PaperControl {
 
     public PaperControlImpl() {
 
-        this.templateFile = "paperTemplates/template_essay_de.vm";
+        this.templateFile = "paperTemplates" + File.separator + "template_essay_de.vm";
         this.bibTeXFile = "bibtex.vm";
                 
         log.info("PaperControl wurde instanziert...");
@@ -233,9 +233,9 @@ public class PaperControlImpl implements PaperControl {
     private void createBibliographyFile() {
         
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-        String realPath = servletContext.getRealPath("/");
+        String realPath = servletContext.getRealPath(File.separator);
         
-        String filePath = realPath + "/" + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr() + "/literature.bib";
+        String filePath = realPath + File.separator + this.author.getLastname() + File.separator +  this.currentPaper.getPaperPosNr() + File.separator + "literature.bib";
                     
         //paper uses bibliography
         if(this.currentPaper.getUseBibliography()) {
@@ -389,14 +389,15 @@ public class PaperControlImpl implements PaperControl {
                 BufferedWriter bufferedWriter = null;
                 
                 ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-                String realPath = servletContext.getRealPath("/");
+                String realPath = servletContext.getRealPath(File.separator);
         
-                File file = new File(realPath + "/" + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr() + "/" + this.createOutputFileName() + ".tex");
+                File file = new File(realPath + File.separator + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr() + File.separator + this.createOutputFileName() + ".tex");
 
                 try {
                     fileWriter = new FileWriter(file.getAbsoluteFile(), false);
                     bufferedWriter = new BufferedWriter(fileWriter);
-                } catch (IOException ex) {
+                } 
+                catch (IOException ex) {
                     Logger.getLogger(PaperControlImpl.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
@@ -547,11 +548,11 @@ public class PaperControlImpl implements PaperControl {
                                     + "\\end{figure}\n\n";
 
                     ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-                    String realPath = servletContext.getRealPath("/");
+                    String realPath = servletContext.getRealPath(File.separator);
                     
-                    String filePath = realPath + "/" + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr() + "/figures";
+                    String filePath = realPath + File.separator + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr() + File.separator + "figures";
 
-                    Utilities.writeFile(((Graphic)chapterContent.get(j)).getImage(), filePath + "/" + chapterContent.get(j).getTitle().replaceAll(" ", "_") + "." + Utilities.modifyMIMEType(((Graphic)chapterContent.get(j)).getFile()));
+                    Utilities.writeFile(((Graphic)chapterContent.get(j)).getImage(), filePath + File.separator + chapterContent.get(j).getTitle().replaceAll(" ", "_") + "." + Utilities.modifyMIMEType(((Graphic)chapterContent.get(j)).getFile()));
                 }
             }
         }

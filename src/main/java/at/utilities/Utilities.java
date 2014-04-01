@@ -222,10 +222,10 @@ public class Utilities {
     public static boolean prepareForExport(String destFolderName) {
         
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-        String realPath = servletContext.getRealPath("/");
+        String realPath = servletContext.getRealPath(File.separator);
                 
-        File srcFolder = new File(realPath + "/WEB-INF/necessaryPaperFiles");
-    	File destFolder = new File(realPath + "/" + destFolderName);
+        File srcFolder = new File(realPath + File.separator + "WEB-INF" + File.separator + "necessaryPaperFiles");
+    	File destFolder = new File(realPath + File.separator + destFolderName);
  
     	if(!srcFolder.exists()) {
 
@@ -295,9 +295,9 @@ public class Utilities {
     public static void cleanUpAfterExport(String destFolderName) {
         
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-        String realPath = servletContext.getRealPath("/");
+        String realPath = servletContext.getRealPath(File.separator);
                 
-        File folder = new File(realPath + "/" + destFolderName);
+        File folder = new File(realPath + File.separator + destFolderName);
  
     	if(!folder.exists()) {
 
@@ -355,7 +355,7 @@ public class Utilities {
             // source-path: ../awapp/<authorLastname>_<paperPosNr>
             // output-path: ../awapp/
             
-            fos = new FileOutputStream(targetPath + "/zipFile.zip");
+            fos = new FileOutputStream(targetPath + File.separator + "zipFile.zip");
             zos = new ZipOutputStream(fos);
 
             File srcFile = new File(srcFolderPath);
