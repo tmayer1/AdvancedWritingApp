@@ -1,0 +1,39 @@
+.infoMessage, .warnMessage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 210px;
+    margin-top: -50px;
+    margin-left: -117px;
+       
+    list-style-type: none;
+    
+    filter: alpha(opacity=8); /* internet explorer */
+    -khtml-opacity: 0.8;      /* khtml, old safari */
+    -moz-opacity: 0.8;       /* mozilla, netscape */
+    opacity: 0.8;           /* fx, safari, opera */
+    
+    z-index: 100;
+}
+
+.infoMessage {
+    color: #4F8A09;
+    background-color: #DFF2BF;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.warnMessage {
+    color: #D8000C;
+    background-color: #FFBABA;
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.messageBox li {
+    text-align: center;
+    
+    cursor: default;
+}

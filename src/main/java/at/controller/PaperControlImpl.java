@@ -75,14 +75,14 @@ public class PaperControlImpl implements PaperControl {
 
     private Paper currentPaper = null;
 
-    private int paperPosNr = 1;
+    private int paperPosNr;
 
 
     public PaperControlImpl() {
 
         this.templateFile = "paperTemplates/template_essay_de.vm";
         this.bibTeXFile = "bibtex.vm";
-        
+                
         log.info("PaperControl wurde instanziert...");
     }
 
@@ -96,9 +96,6 @@ public class PaperControlImpl implements PaperControl {
 
             this.author.addPaper(this.currentPaper);
             
-            //prepare for export (Foldername: authorLastname_paperTitle)
-            Utilities.prepareForExport(this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr());
-        
             return "titlecreation?faces-redirect=true";
         }
         else {
@@ -142,9 +139,7 @@ public class PaperControlImpl implements PaperControl {
                 Paper tempPaper = this.author.getPaper(title);
 
                 if (tempPaper != null) {
-
                     this.author.removePaper(title);
-                    this.paperService.removePaper(tempPaper);
                 }
                 else {
                     log.error("Violation of precondition (PaperControlImpl.author.getPaper(title) != null)! Paper could not be removed...");
@@ -174,10 +169,10 @@ public class PaperControlImpl implements PaperControl {
         }
     }
     
-    //helper-method for LoginControlImpl.logout()
+    // helper-method for LoginControlImpl.logout()
     public void removeCurrentPaper() {
         
-        this.author.getPapers().remove(this.currentPaper);
+        this.author.removePaper(this.currentPaper.getTitle());
         this.currentPaper = null;
     }
 
@@ -330,6 +325,16 @@ public class PaperControlImpl implements PaperControl {
             
             if(this.currentPaper != null && this.currentPaper.getTitle() != null && this.currentPaper.getAbstractPart() != null && this.currentPaper.getLang() != null) {
         
+                //prepare for export (Foldername: authorLastname_paperTitle)
+                if (!Utilities.prepareForExport(this.author.getLastname() + "_" + this.currentPaper.getPaperPosNr())) {
+
+                    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, ResourceBundle.getBundle("i18n").getString("exportunsuccessfully"), "");
+                    FacesContext context = FacesContext.getCurrentInstance();
+                    context.addMessage(null, message);
+                    
+                    return;
+                }
+            
                 Template template = null;
 
                 try {
@@ -414,6 +419,8 @@ public class PaperControlImpl implements PaperControl {
                 
                 GUIUtilities.downloadFile(realPath + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr());
                 
+                // delete temporary folder
+                Utilities.cleanUpAfterExport(this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr());
             }
             else {
                 log.error("Violation of precondition (currentPaper != null or currentPaper's attributes != null)! Output could not be generated...");
@@ -591,5 +598,14 @@ public class PaperControlImpl implements PaperControl {
         name = name.replace("ü","ue");
         
         return name;
+    }
+    
+    public void initPaperPosNr() {
+        
+        if (this.author != null && !this.author.getSortedPapersList().isEmpty()) {
+             this.paperPosNr = this.author.getSortedPapersList().get(this.author.getSortedPapersList().size() - 1).getPaperPosNr() + 1;
+        } else {
+            this.paperPosNr = 1;
+        }
     }
 }

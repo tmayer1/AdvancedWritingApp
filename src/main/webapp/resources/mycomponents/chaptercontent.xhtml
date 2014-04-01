@@ -73,7 +73,7 @@
 
                         <p><h:message id="errorMessage" class="validationError" for="file" showDetail="true"/></p>
 
-                        <h:panelGroup p:id="graphicImage" id="imgTags" layout="block" rendered="#{cc.attrs.instance.file == null ? false : true}">
+                        <h:panelGroup p:id="graphicImage" id="imgTags" layout="block" rendered="#{cc.attrs.instance.image == null ? false : true}">
                             <h:graphicImage width="#{cc.attrs.instance.getCalcWidthAsString()}" value="image?matnr=#{loginControl.author.matnr}&amp;papertitle=#{loginControl.paperControl.currentPaper.title}&amp;graphictitle=#{cc.attrs.instance.title}"/>
                             <br/>
                             <span class="imgTags"><h:outputText value="#{msg.height}: "/><h:outputText value="#{cc.attrs.instance.getHeightAsString()}px"/></span><span class="imgTags"><h:outputText value="#{msg.width}: "/><h:outputText value="#{cc.attrs.instance.getWidthAsString()}px"/></span>

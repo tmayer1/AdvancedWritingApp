@@ -33,4 +33,6 @@ public interface AuthorService {
     @Transactional
     public Author updateAuthor(Author author);
 
+    @Transactional
+    public void testDBConnection();
 }

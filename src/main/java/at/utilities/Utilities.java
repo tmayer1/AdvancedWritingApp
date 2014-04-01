@@ -108,11 +108,11 @@ public class Utilities {
     
     public static String modifyMIMEType(Part file) {
         
-        if ("image/jpeg".equals(file.getContentType())) {
+        if (file != null && "image/jpeg".equals(file.getContentType())) {
             return "jpg";
         }
 
-        if ("image/png".equals(file.getContentType())) {
+        if (file != null && "image/png".equals(file.getContentType())) {
             return "png";
         }
         
@@ -219,7 +219,7 @@ public class Utilities {
     
     
     //copies all the necessary files for the laTeX-output (style-files, figures, ...)
-    public static void prepareForExport(String destFolderName) {
+    public static boolean prepareForExport(String destFolderName) {
         
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
         String realPath = servletContext.getRealPath("/");
@@ -229,21 +229,25 @@ public class Utilities {
  
     	if(!srcFolder.exists()) {
 
-            log.error("Directory does not exist...");
+            log.error("Directory (necessaryPaperFiles) does not exist...");
         }
-        else{
+        else {
  
            try {
         	Utilities.copyFolder(srcFolder, destFolder);
+                return true;
            }
-           catch(IOException ex){
+           catch(IOException ex) {
         	log.error("Could not copy source-folder to destination-folder...", ex);
+                return false;
            }
         }
+        
+        return false;
     }
     
     
-    public static void copyFolder(File src, File dest) throws IOException{
+    public static void copyFolder(File src, File dest) throws IOException {
  
     	if(src.isDirectory()){
  
@@ -288,6 +292,58 @@ public class Utilities {
     	}
     }
     
+    public static void cleanUpAfterExport(String destFolderName) {
+        
+        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        String realPath = servletContext.getRealPath("/");
+                
+        File folder = new File(realPath + "/" + destFolderName);
+ 
+    	if(!folder.exists()) {
+
+            log.error("Directory does not exist...");
+        }
+        else{
+ 
+           try {
+        	Utilities.deleteFolder(folder);
+                log.info("Folder successfully removed...");
+           }
+           catch(IOException ex){
+        	log.error("Could not delete folder...", ex);
+           }
+        }
+    }
+    
+    public static void deleteFolder(File folder) throws IOException {
+        
+        if(folder.isDirectory()) {
+ 
+    		if(folder.list().length == 0) {
+ 
+    		   folder.delete();
+    		}
+                else {
+ 
+        	   String files[] = folder.list();
+ 
+        	   for (String temp : files) {
+
+                        File fileDelete = new File(folder, temp);
+                        deleteFolder(fileDelete);
+        	   }
+ 
+        	   if(folder.list().length == 0){
+           	        folder.delete();
+                }
+            }
+        } 
+        else {
+
+            folder.delete(); 
+        }
+    }
+    
     // create temporary zip-file (will be deleted after finishing export)
     public static void createZipfileFromFolder(String srcFolderPath, String targetPath) {
 
@@ -296,8 +352,8 @@ public class Utilities {
         
         try {
          
-            // source-path: ../target/Advanced_Writing_App/<authorLastname>_<paperPosNr>
-            // output-path: ../target/Advanced_Writing_App/
+            // source-path: ../awapp/<authorLastname>_<paperPosNr>
+            // output-path: ../awapp/
             
             fos = new FileOutputStream(targetPath + "/zipFile.zip");
             zos = new ZipOutputStream(fos);
@@ -330,47 +386,53 @@ public class Utilities {
 
         File[] files = srcFile.listFiles();
         
-        for (int i = 0; i < files.length; i++) {
+        if(files != null) {
             
-            // if the file is directory, use recursion
-            if (files[i].isDirectory()) {
-                addFolderToArchive(zos, files[i]);
-                continue;
-            }
-            
-            FileInputStream fis = null;
-            
-            try {
+            for (int i = 0; i < files.length; i++) {
 
-                // create byte buffer
-                byte[] buffer = new byte[1024];
-
-                fis = new FileInputStream(files[i]);
-
-                zos.putNextEntry(new ZipEntry(files[i].getAbsolutePath()));
-
-                int length;
-                
-                while ((length = fis.read(buffer)) > 0) {
-                    zos.write(buffer, 0, length);
+                // if the file is directory, use recursion
+                if (files[i].isDirectory()) {
+                    addFolderToArchive(zos, files[i]);
+                    continue;
                 }
-            } 
-            catch (IOException ex) {
-                log.error("Unable to create ZipEntry...", ex);
-            }
-            finally {
+
+                FileInputStream fis = null;
+
                 try {
-                    if (zos != null) {
-                        zos.closeEntry();
-                    }
-                    if (fis != null) {
-                        fis.close();
+
+                    // create byte buffer
+                    byte[] buffer = new byte[1024];
+
+                    fis = new FileInputStream(files[i]);
+
+                    zos.putNextEntry(new ZipEntry(files[i].getAbsolutePath()));
+
+                    int length;
+
+                    while ((length = fis.read(buffer)) > 0) {
+                        zos.write(buffer, 0, length);
                     }
                 } 
                 catch (IOException ex) {
-                   log.error("Unable to close ZipEntry or InputStream...", ex);
+                    log.error("Unable to create ZipEntry...", ex);
+                }
+                finally {
+                    try {
+                        if (zos != null) {
+                            zos.closeEntry();
+                        }
+                        if (fis != null) {
+                            fis.close();
+                        }
+                    } 
+                    catch (IOException ex) {
+                       log.error("Unable to close ZipEntry or InputStream...", ex);
+                    }
                 }
             }
+        }
+        else {
+            log.error("Unable to create Zip-File (empty source-file)...");
         }
     }
 }

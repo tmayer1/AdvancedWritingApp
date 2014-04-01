@@ -383,7 +383,7 @@ public class GUIUtilities {
 
         } 
         catch (IOException ex) {
-            java.util.logging.Logger.getLogger(GUIUtilities.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("Could not download file...", ex);
         }
     }
 }

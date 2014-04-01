@@ -53,16 +53,16 @@ public class Author implements Serializable {
     private boolean isUsedNow = false;
     
     @Transient
-    private int sourcePosNr = 0;
+    private int sourcePosNr;
     
     @Transient
-    private int bookPosNr = 0;
+    private int bookPosNr;
     
     @Transient
-    private int thesisPosNr = 0;
+    private int thesisPosNr;
     
     @Transient
-    private int miscPosNr = 0;
+    private int miscPosNr;
     
     public Author() {
         
@@ -195,20 +195,41 @@ public class Author implements Serializable {
     
     public void removePaper(String title) {
 
-        Iterator it = this.papers.iterator();
+        // hash-code-problem with iterator over hashSet
+        /*Iterator it = this.papers.iterator();
 
         while (it.hasNext()) {
 
             Paper paperTemp = (Paper) it.next();
 
             if (paperTemp != null) {
-                if (paperTemp.getTitle().equals(title)) {
+                
+                if(paperTemp.getTitle() == null) {
                     this.papers.remove(paperTemp);
-                    
                     
                     log.info("Paper " + paperTemp.getTitle() + " wurde entfernt...");
                     break;
                 }
+                
+                if (paperTemp.getTitle().equals(title)) {
+                    this.papers.remove(paperTemp);
+                    
+                    log.info("Paper " + paperTemp.getTitle() + " wurde entfernt...");
+                    break;
+                }
+            }
+        }
+        */
+
+        List<Paper> tempList = this.getPapersList();
+                
+        for (int i = 0; i < tempList.size(); i++) {
+
+            if (tempList.get(i).getTitle().equals(title)) {
+                tempList.remove(i);
+                
+                this.papers = new HashSet<Paper>(tempList);
+                break;
             }
         }
     }

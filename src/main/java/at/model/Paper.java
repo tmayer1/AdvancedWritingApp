@@ -64,8 +64,7 @@ public class Paper implements Serializable {
     @Transient
     private Chapter currentChapter;
     
-    @Transient
-    private int chapterPosNr = 0;
+    private int chapterPosNr;
     
     
     public Paper() {
@@ -331,6 +330,10 @@ public class Paper implements Serializable {
         return this.getListOfSet(this.chapters);
     }
     
+    public List<Chapter> getSortedChaptersAsList() {
+        return this.sortChapters(this.getListOfSet(this.chapters));
+    }
+    
     /**
      * @param chapter the chapter to add
      */
@@ -361,7 +364,7 @@ public class Paper implements Serializable {
         }
         return sortedSectionChapters;
     }
-
+    
     @Override
     public boolean equals(Object other) {
 

@@ -21,10 +21,13 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import at.model.Author;
 import at.service.AuthorService;
+import java.util.ResourceBundle;
+import javax.faces.application.FacesMessage;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.CannotCreateTransactionException;
 
 @Controller("loginControl")
 @Scope("session")
@@ -62,6 +65,7 @@ public class LoginControlImpl {
 
                     this.paperControl.setAuthor(this.author);
                     this.author.setIsUsedNow(true);
+                    this.paperControl.initPaperPosNr();
                     this.paperControl.saveAll();
 
                     return "portfolio?faces-redirect=true";
@@ -78,6 +82,10 @@ public class LoginControlImpl {
         
         String uri = hsr.getRequestURI();
          
+        if(this.paperControl.getCurrentPaper() != null && this.paperControl.getCurrentPaper().getTitle() == null) {
+            
+            this.paperControl.removeCurrentPaper();
+        }
         
         this.author.setIsUsedNow(false);
         this.paperControl.saveAll();
@@ -91,6 +99,28 @@ public class LoginControlImpl {
         log.info("logout...");
         
         return "index";
+    }
+    
+    public boolean testDBConnection() {
+        
+        try {
+            this.authorService.testDBConnection();
+        } 
+        catch (Exception ex) {
+            // no DB-connection
+            log.fatal("Keine Verbindung zur Datenbank!");
+            
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, ResourceBundle.getBundle("i18n").getString("nodbconnection"), "");
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, message);
+            
+            return false;
+        }  
+        
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, ResourceBundle.getBundle("i18n").getString("dbconnectionsuccess"), "");
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, message);
+        return true;
     }
 
 
@@ -161,6 +191,7 @@ public class LoginControlImpl {
         
         this.author = test;
         
-        this.authorService.addAuthor(test);        
+        this.authorService.addAuthor(test); 
+
     }
 }

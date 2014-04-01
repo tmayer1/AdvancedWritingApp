@@ -17,24 +17,34 @@
 
 <!DOCTYPE html>
 <html lang="de"
-      xmlns:jsf="http://java.sun.com/jsf"
-      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:mc="http://java.sun.com/jsf/composite/mycomponents">
-
+      xmlns:mc="http://java.sun.com/jsf/composite/mycomponents"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+    
+    <head>
+        <link rel="stylesheet" href="#{facesContext.externalContext.requestContextPath}/resources/styles/indexcss.css" />
+    </head>
+    
     <body>
 
         <div>
-
-            <mc:login id="login" matnr="#{loginControl.matnr}" password="#{loginControl.password}" action="#{loginControl.login()}"/>
-            <h:messages id="login_messages" for="login" errorClass="error" showDetail="true" showSummary="false"/>
-            <br/>
-            <h:form> 
-                <h:commandLink value="Default-Author erzeugen" action="#{loginControl.createDefaultAuthor()}"/>
+            <h:panelGroup rendered="#{loginControl.testDBConnection()}">
+                <mc:login id="login" matnr="#{loginControl.matnr}" password="#{loginControl.password}" action="#{loginControl.login()}"/>
+                <h:messages id="login_messages" for="login" errorClass="error" showDetail="true" showSummary="false"/>
                 <br/>
-                <h:commandLink value="#{msg.register}" action="register?faces-redirect=true"/>
-            </h:form>
+                <h:form> 
+                    <h:commandButton value="#{msg.register}" action="register?faces-redirect=true"/>
+                    <br/>
+                    <br/>
+                    <h:commandButton value="Default-Author erzeugen" action="#{loginControl.createDefaultAuthor()}"/>
+                </h:form>
+            </h:panelGroup>
+            <div id="messages">
+                <h:messages errorClass="errorMessage" infoClass="infoMessage" warnClass="warnMessage" globalOnly="true"/>
+            </div>
         </div>
 
     </body>

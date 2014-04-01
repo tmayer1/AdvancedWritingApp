@@ -69,14 +69,11 @@ public class Chapter implements Serializable {
     @Transient
     private boolean firstChapterInSection;
         
-    @Transient
-    private int chapterContentPosNr = 0;
+    private int chapterContentPosNr;
     
-    @Transient
-    private int paragraphPosNr = 0;
+    private int paragraphPosNr;
     
-    @Transient
-    private int graphicPosNr = 0;
+    private int graphicPosNr;
 
     public Chapter() {
 

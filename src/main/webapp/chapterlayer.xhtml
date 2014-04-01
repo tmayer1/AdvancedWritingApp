@@ -33,7 +33,7 @@
                 <div id="chapterLayer" class="container">
 
                         <h:panelGroup layout="block" id="captionArea" class="area">
-                            <h2><h:outputLabel p:for="chapterTitleInput" value="#{msg.caption}"/></h2>
+                            <h2><h:outputLabel for="chapterTitleInput" p:for="chapterTitleInput" value="#{msg.caption}"/></h2>
                             <p><h:inputText id="chapterTitleInput" p:id="chapterTitleInput" p:required="true" value="#{loginControl.paperControl.currentPaper.currentChapter.title}"/></p>
                         </h:panelGroup>
 

@@ -100,4 +100,8 @@ public class AuthorServiceImpl implements AuthorService {
         
         return currentAuthorStateManaged;
     }
+    
+    public void testDBConnection() {
+        this.authorDAO.flush();
+    }
 }
