@@ -14,8 +14,8 @@
 
     
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
-          p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost/Advanced_Writing_App_DB"
-          p:username="root" p:password="" p:initialSize="5" p:maxActive="10">
+          p:driverClassName="com.mysql.jdbc.Driver" p:url="jdbc:mysql://localhost/awapp_db"
+          p:username="root" p:password="LF6doNkj" p:initialSize="5" p:maxActive="10">
     </bean>
  
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">

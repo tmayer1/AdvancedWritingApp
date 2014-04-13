@@ -40,12 +40,18 @@ import at.service.AuthorService;
 import at.service.PaperService;
 import at.utilities.GUIUtilities;
 import at.utilities.Utilities;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
 import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.ParseErrorException;
 import org.apache.velocity.exception.ResourceNotFoundException;
@@ -76,13 +82,18 @@ public class PaperControlImpl implements PaperControl {
     private Paper currentPaper = null;
 
     private int paperPosNr;
+    
+    private String realPath;
 
 
     public PaperControlImpl() {
 
         this.templateFile = "paperTemplates" + File.separator + "template_essay_de.vm";
         this.bibTeXFile = "bibtex.vm";
-                
+        
+        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+        this.realPath = servletContext.getRealPath(File.separator);
+                        
         log.info("PaperControl wurde instanziert...");
     }
 
@@ -232,29 +243,28 @@ public class PaperControlImpl implements PaperControl {
     
     private void createBibliographyFile() {
         
-        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-        String realPath = servletContext.getRealPath(File.separator);
-        
-        String filePath = realPath + File.separator + this.author.getLastname() + File.separator +  this.currentPaper.getPaperPosNr() + File.separator + "literature.bib";
+        // outputfile-path
+        String filePath = this.realPath + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr() + File.separator + "literature.bib";
                     
-        //paper uses bibliography
+        // paper uses bibliography
         if(this.currentPaper.getUseBibliography()) {
             
-            if(this.author != null && this.author.getSources() != null) {
+            if (this.author != null && this.author.getSources() != null) {
 
-                Template template = null;
-
+                    Template template = null;
+                    
                     try {
 
-                        template = this.velocityEngine.getTemplate(this.bibTeXFile);
+                        template = this.velocityEngine.getTemplate(this.bibTeXFile, "UTF-8");
 
-                    } catch (ResourceNotFoundException rnfe) {
+                    } 
+                    catch (ResourceNotFoundException ex) {
 
-                        System.out.println("Example : error : cannot find template " + this.bibTeXFile);
+                        log.error("Example : error : cannot find template " + this.bibTeXFile);
+                    } 
+                    catch (ParseErrorException ex) {
 
-                    } catch (ParseErrorException pee) {
-
-                        System.out.println("Example : Syntax error in template " + this.bibTeXFile + ":" + pee);
+                        log.error("Example : Syntax error in template " + this.bibTeXFile + ": " + ex);
                     }
 
                     // create a context and add data
@@ -263,16 +273,17 @@ public class PaperControlImpl implements PaperControl {
 
                 
                     // writer initialization
-                    FileWriter fileWriter = null;
+                    OutputStreamWriter fileWriter = null;
                     BufferedWriter bufferedWriter = null;
                     
                     File file = new File(filePath);
 
                     try {
-                        fileWriter = new FileWriter(file.getAbsoluteFile(), false);
+                        fileWriter = new OutputStreamWriter(new FileOutputStream(file.getAbsoluteFile()), "UTF-8");
                         bufferedWriter = new BufferedWriter(fileWriter);
-                    } catch (IOException ex) {
-                        Logger.getLogger(PaperControlImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
+                    catch (IOException ex) {
+                        log.error("Could not create writers...", ex);
                     }
 
                     // template merging
@@ -285,14 +296,15 @@ public class PaperControlImpl implements PaperControl {
 
                         bufferedWriter.flush();
                         bufferedWriter.close();
+                    } 
+                    catch (IOException ex) {
 
-                    } catch (IOException ex) {
-
-                        Logger.getLogger(PaperControlImpl.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                        log.error("Could not close bufferedWriter...", ex);
+                    }   
             }
         }
         else {
+            // paper does not use a biliography
             
             File tempFile = new File(filePath);
             
@@ -302,7 +314,7 @@ public class PaperControlImpl implements PaperControl {
                 log.info("Existing bibliography-file removed...");
             }
             
-            log.info("No bibliography-file added...");
+            log.info("No bibliography-file added...");  
         }
     }
     
@@ -336,18 +348,23 @@ public class PaperControlImpl implements PaperControl {
                 }
             
                 Template template = null;
+                
+                // set encoding-properties
+                this.velocityEngine.setProperty(Velocity.ENCODING_DEFAULT, "UTF-8");
+                this.velocityEngine.setProperty(Velocity.INPUT_ENCODING, "UTF-8");
+                this.velocityEngine.setProperty(Velocity.OUTPUT_ENCODING, "UTF-8");
 
                 try {
+                    
+                    template = this.velocityEngine.getTemplate(this.templateFile, "UTF-8");
 
-                    template = this.velocityEngine.getTemplate(this.templateFile);
+                } catch (ResourceNotFoundException ex) {
 
-                } catch (ResourceNotFoundException rnfe) {
+                    log.error("Example : error : cannot find template " + this.templateFile);
 
-                    System.out.println("Example : error : cannot find template " + this.templateFile);
+                } catch (ParseErrorException ex) {
 
-                } catch (ParseErrorException pee) {
-
-                    System.out.println("Example : Syntax error in template " + this.templateFile + ":" + pee);
+                    log.error("Example : Syntax error in template " + this.templateFile + ":" + ex);
                 }
 
 
@@ -385,20 +402,18 @@ public class PaperControlImpl implements PaperControl {
                 this.createBibliographyFile();
 
                 // writer initialization
-                FileWriter fileWriter = null;
+                OutputStreamWriter fileWriter = null;
                 BufferedWriter bufferedWriter = null;
                 
-                ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-                String realPath = servletContext.getRealPath(File.separator);
         
-                File file = new File(realPath + File.separator + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr() + File.separator + this.createOutputFileName() + ".tex");
+                File file = new File(this.realPath + File.separator + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr() + File.separator + this.createOutputFileName() + ".tex");
 
                 try {
-                    fileWriter = new FileWriter(file.getAbsoluteFile(), false);
+                    fileWriter = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
                     bufferedWriter = new BufferedWriter(fileWriter);
                 } 
                 catch (IOException ex) {
-                    Logger.getLogger(PaperControlImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error("Could not create writers...", ex);
                 }
 
 
@@ -415,10 +430,10 @@ public class PaperControlImpl implements PaperControl {
 
                 } catch (IOException ex) {
 
-                    Logger.getLogger(PaperControlImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error("Could not close bufferedWriter...", ex);
                 }
                 
-                GUIUtilities.downloadFile(realPath + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr());
+                GUIUtilities.downloadFile(this.realPath + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr());
                 
                 // delete temporary folder
                 Utilities.cleanUpAfterExport(this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr());
@@ -546,11 +561,9 @@ public class PaperControlImpl implements PaperControl {
                                     +   "\t\\includegraphics[scale=" + Utilities.calcScalingFactor(((Graphic)chapterContent.get(j)).getHeight(), ((Graphic)chapterContent.get(j)).getWidth()) + "]{" + chapterContent.get(j).getTitle().replaceAll(" ", "_") + "}\n"
                                     +   "\t\\caption{" + chapterContent.get(j).getTitle() + "}\n"
                                     + "\\end{figure}\n\n";
-
-                    ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-                    String realPath = servletContext.getRealPath(File.separator);
                     
-                    String filePath = realPath + File.separator + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr() + File.separator + "figures";
+                    
+                    String filePath = this.realPath + File.separator + this.author.getLastname() + "_" +  this.currentPaper.getPaperPosNr() + File.separator + "figures";
 
                     Utilities.writeFile(((Graphic)chapterContent.get(j)).getImage(), filePath + File.separator + chapterContent.get(j).getTitle().replaceAll(" ", "_") + "." + Utilities.modifyMIMEType(((Graphic)chapterContent.get(j)).getFile()));
                 }

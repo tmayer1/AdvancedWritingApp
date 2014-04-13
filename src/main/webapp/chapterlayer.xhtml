@@ -112,17 +112,37 @@
                                     // write posNr into jsf-model
                                     var myInputArray1 = this.getElementsByTagName("INPUT");
                                     var myInputArray2 = dragSrcEl.getElementsByTagName("INPUT");
+                                    
+                                    // target
+                                    var hiddenPosNr1 = {};
+                                    var elms = myInputArray1;
+                                    for (var i = 0; i < elms.length; i++) {
+                                        if (elms[i].classList.contains('hidden')) {
+                                            hiddenPosNr1 = elms[i];
+                                            break;
+                                        }
+                                    }
+                                    
+                                    // src
+                                    var hiddenPosNr2 = {};
+                                    var elms2 = myInputArray2;
+                                    for (var i = 0; i < elms2.length; i++) {
+                                        if (elms2[i].classList.contains('hidden')) {
+                                            hiddenPosNr2 = elms2[i];
+                                            break;
+                                        }
+                                    }
                                   
-                                    var valuetemp1 = myInputArray1[2].value;  // this.posNr
-                                    var valuetemp2 = myInputArray2[2].value;  // src.posNr
+                                    //var valuetemp1 = myInputArray1[2].value;  // this.posNr
+                                    //var valuetemp2 = myInputArray2[2].value;  // src.posNr
                                     
                                     // Set the source column's HTML to the HTML of the columnwe dropped on.
                                     dragSrcEl.innerHTML = this.innerHTML;
                                     this.innerHTML = e.dataTransfer.getData('text/html');
                                   
                                     //handle right positioning
-                                    setposnr(myInputArray2[2].id, valuetemp2);
-                                    setposnr(myInputArray1[2].id, valuetemp1);
+                                    setposnr(hiddenPosNr1.id, hiddenPosNr2.value);
+                                    setposnr(hiddenPosNr2.id, hiddenPosNr1.value);
                                   
                                   
                                   if(dragSrcEl.classList.contains('paragraph') && this.classList.contains('graphic')) {

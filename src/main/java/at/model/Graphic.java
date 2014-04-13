@@ -139,43 +139,50 @@ public class Graphic extends ChapterContent implements Serializable {
     
     public void setFile(Part file) {
         
-        if (Utilities.validateFileType(file)) {
-        
-            this.file = file;
-
-            log.info(file.getContentType());
-
-            InputStream input = null;
-            byte[] imageByteArray = null;
-
-            try {
-                input = this.file.getInputStream();
-                imageByteArray = IOUtils.toByteArray(input);          // Apache commons IO.
-                this.setImage(imageByteArray);
-                this.type = file.getContentType();
-
-                BufferedInputStream in = new BufferedInputStream(file.getInputStream());
-                BufferedImage image = ImageIO.read(in);
-
-                this.height = image.getHeight();
-                this.width = image.getWidth();
-
-            } 
-            catch (IOException ex) {
-                java.util.logging.Logger.getLogger(Graphic.class.getName()).log(Level.SEVERE, null, ex);
+        if(file != null) {
+            
+            long fileSize = 0;
+            
+            // use of fileSize for comparation
+            if(this.file != null) {
+                fileSize = this.file.getSize();
             }
-            finally {
-                if(input != null) {
-                    try {
-                        input.close();
-                    } catch (IOException ex) {
-                        java.util.logging.Logger.getLogger(Graphic.class.getName()).log(Level.SEVERE, null, ex);
+            
+            if (Utilities.validateFileType(file) && file.getSize() != fileSize) {
+
+                this.file = file;
+
+                log.info(file.getContentType());
+
+                InputStream input = null;
+                byte[] imageByteArray = null;
+
+                try {
+                    input = this.file.getInputStream();
+                    imageByteArray = IOUtils.toByteArray(input);  // Apache commons IO.
+                    this.setImage(imageByteArray);
+                    this.type = file.getContentType();
+
+                    BufferedInputStream in = new BufferedInputStream(file.getInputStream());
+                    BufferedImage image = ImageIO.read(in);
+
+                    this.height = image.getHeight();
+                    this.width = image.getWidth();
+
+                } 
+                catch (IOException ex) {
+                    java.util.logging.Logger.getLogger(Graphic.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                finally {
+                    if(input != null) {
+                        try {
+                            input.close();
+                        } catch (IOException ex) {
+                            java.util.logging.Logger.getLogger(Graphic.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }
-        }
-        else {
-            this.file = null;
         }
     }
 
