@@ -20,7 +20,15 @@ package at.dao;
 import java.io.Serializable;
 import java.util.List;
 
-
+/**
+ * Interface for a controller used to handle the registration process.
+ * In more specific that means that implementations of the interface are 
+ * able to save authors into the database as part of the registration 
+ * (request-scoped).
+ * 
+ * 
+ * @author Thomas Mayer
+ */
 public interface GenericDAO<E, ID extends Serializable> {
 
         //create

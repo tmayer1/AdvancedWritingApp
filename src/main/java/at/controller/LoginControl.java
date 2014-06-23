@@ -19,16 +19,16 @@ package at.controller;
 
 
 /**
- * Interface for a controller used to handle scientific papers (in this 
- * prototype only seminar thesis).
- * In more specific that means that implementations of the interface are able to
- * create, edit and delete papers to finally generate a laTex-File out of the 
- * model-data.
+ * Interface for a controller used to handle the login-process.
+ * In more specific that means that implementations of the interface are 
+ * able to process login- and logout-actions on a specific 
+ * <code>Author</code>-instance (session-scoped). Furthermore, there is a method
+ * to test if the application is connected to the database.
  * 
  * 
  * @author Thomas Mayer
  */
-public interface PaperControl {
+public interface LoginControl {
     
     /**
      * Creates a new paper for a specific author.
@@ -43,7 +43,7 @@ public interface PaperControl {
      * 
      * @return 
      */
-    public String createPaper();
+    public String login();
 
     
     /**
@@ -62,11 +62,9 @@ public interface PaperControl {
      * <p>
      * Invariants: DB-state (nothing is written to the DB)
      * 
-     * @param title the title of the paper which has to be set as current paper
-     * 
      * @return 
      */
-    public String editPaper(String title);
+    public String logout();
     
     
     /**
@@ -79,55 +77,15 @@ public interface PaperControl {
      * Precondition: title != null
      * <br/>
      * Precondition: The paper to remove must already exist in author's 
-     * paperlist (PaperControlImpl.author.getPaper(title) != null).
+     * paperlist
+     * (PaperControlImpl.author.getPaper(title) != null).
      * <p>
      * Postcondition: One paper has been removed from authors' paperlist 
      * (PaperControlImpl.author.papers.size--).
      * 
-     * @param title the title of the paper which has to be removed
+     * @return true if the test is successful, false otherwise
      */
-    public void removePaper(String title);
-    
-    
-    /**
-     * Saves the actual state of an author. 
-     * The Method writes/maps one particular author-instance including papers, 
-     * chapters, paragraphs and graphics to the DB.
-     * <p>
-     * Precondition: An author must already exist 
-     * (PaperControlImpl.author != null).
-     * <br/>
-     * Precondition: Access to a database must be ensured 
-     * (existing DB-connection).
-     * <p>
-     * Postcondition: The actual author-instance (object) has been stored in the
-     * DB. 
-     */
-    public void saveAll();
-    
-    
-    /**
-     * Creates a laTex-file as output.
-     * The generated output depends on the the structure and data of a specific 
-     * paper (PaperControlImpl.currentPaper).
-     * <p>
-     * Precondition: An author must already exist 
-     * (PaperControlImpl.author != null).
-     * <br/>
-     * Precondition: All necessary attributes of author has to be != null 
-     * (for word-processing).
-     * <br/>
-     * Precondition: The current paper has to be set 
-     * (PaperControlImpl.currentPaper != null).
-     * <br/>
-     * Precondition: All necessary attributes of currentPaper has to be != null 
-     * (for word-processing).
-     * <p>
-     * Postcondition: A latex-Outputfile has been generated out of 
-     * currentPaper's data.
-     * <p>
-     * Invariants: DB-state (nothing is written to the DB)
-     */
-    public void createOutputFile();
+    public boolean testDBConnection();
+  
     
 }

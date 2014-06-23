@@ -223,15 +223,21 @@ public class Author implements Serializable {
 
         List<Paper> tempList = this.getPapersList();
                 
-        for (int i = 0; i < tempList.size(); i++) {
+        // helper-condition for logout in titlecreation.xhtml
+        if(title == null) {
+            tempList.remove(tempList.size() - 1);
+        }
+        else {
+            for (int i = 0; i < tempList.size(); i++) {
 
-            if (tempList.get(i).getTitle().equals(title)) {
-                tempList.remove(i);
-                
-                this.papers = new HashSet<Paper>(tempList);
-                break;
+                if (tempList.get(i).getTitle().equals(title)) {
+                    tempList.remove(i);
+
+                    break;
+                }
             }
         }
+        this.papers = new HashSet<Paper>(tempList);
     }
     
     public int countPapersChapters(String paperTitle) {

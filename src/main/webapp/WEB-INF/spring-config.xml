@@ -27,7 +27,6 @@
         <property name="entityManagerFactory" ref="entityManagerFactory" />
     </bean>
     
-    
     <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="resourceLoaderPath" value="/WEB-INF/velocity/"/>
     </bean>

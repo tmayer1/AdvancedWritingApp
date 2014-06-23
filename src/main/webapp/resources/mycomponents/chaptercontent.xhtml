@@ -35,8 +35,9 @@
                 <span class="#{cc.attrs.instance.isParagraph() ? 'paragraphTitle' : 'graphicTitle'}"><h:outputText value="#{cc.attrs.instance.title}" rendered="#{!loginControl.paperControl.currentPaper.currentChapter.isChapterContentsContentShown(cc.attrs.instance.title)}"/></span>
                 <h:inputText id="chapterContentTitle" p:id="#{cc.attrs.instance.isParagraph() ? 'paragraphTitleInput' : 'graphicTitleInput'}" value="#{cc.attrs.instance.title}" rendered="#{loginControl.paperControl.currentPaper.currentChapter.isChapterContentsContentShown(cc.attrs.instance.title)}" p:placeholder="#{cc.attrs.instance.title}" p:autofocus="true"/>
                 
-                <h:commandButton styleClass="deletebutton" value="x" action="#{loginControl.paperControl.currentPaper.currentChapter.removeChapterContent(cc.attrs.instance.title)}">
+                <h:commandButton styleClass="deletebutton" value="x" action="#{loginControl.paperControl.saveAll()}">
                     <f:ajax execute="chapterForm" render="chapterForm chapterForm:script"/>
+                    <f:actionListener binding="#{loginControl.paperControl.currentPaper.currentChapter.removeChapterContent(cc.attrs.instance.title)}"/>
                 </h:commandButton>
             
                 <h:commandButton styleClass="editbutton" value="#{msg.edit}" action="*" rendered="#{cc.attrs.instance.isParagraph()}">

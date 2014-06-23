@@ -19,13 +19,10 @@ package at.controller;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import at.model.Author;
 import at.model.Book;
 import at.model.Chapter;
@@ -37,18 +34,16 @@ import at.model.Paragraph;
 import at.model.Source;
 import at.model.Thesis;
 import at.service.AuthorService;
+import at.service.GraphicService;
 import at.service.PaperService;
 import at.utilities.GUIUtilities;
 import at.utilities.Utilities;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.util.ResourceBundle;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -70,6 +65,9 @@ public class PaperControlImpl implements PaperControl {
 
     @Autowired
     private AuthorService authorService;
+    
+    @Autowired
+    private GraphicService grapihcService;
 
     @Autowired
     private VelocityEngine velocityEngine;
@@ -97,7 +95,7 @@ public class PaperControlImpl implements PaperControl {
         log.info("PaperControl wurde instanziert...");
     }
 
-
+    @Override
     public String createPaper() {
 
         this.currentPaper = new Paper();
@@ -115,6 +113,7 @@ public class PaperControlImpl implements PaperControl {
         }
     }
 
+    @Override
     public String editPaper(String title) {
 
         if (this.author != null) {
@@ -141,6 +140,7 @@ public class PaperControlImpl implements PaperControl {
         }
     }
 
+    @Override
     public void removePaper(String title) {
 
         if (this.author != null) {
@@ -165,6 +165,7 @@ public class PaperControlImpl implements PaperControl {
         }
     }
 
+    @Override
     public void saveAll() {
 
         if(this.authorService.updateAuthor(this.author) != null) {
@@ -197,6 +198,9 @@ public class PaperControlImpl implements PaperControl {
     public String savePaperTitle() {
 
         if (this.currentPaper != null) {
+            
+            this.saveAll();
+            
             return "documentlayer?faces-redirect=true";
         }
         else {
@@ -237,6 +241,14 @@ public class PaperControlImpl implements PaperControl {
             return this.author.getSortedPapersList();
         } else {
             return null;
+        }
+    }
+    
+    public void removeGraphic(ChapterContent graphic) {
+        
+        if(graphic != null && graphic instanceof Graphic) {
+            
+            this.grapihcService.removeGraphic((Graphic)graphic);
         }
     }
     
@@ -318,8 +330,7 @@ public class PaperControlImpl implements PaperControl {
         }
     }
     
-
-
+    @Override
     public void createOutputFile() {
 
         // velocity-properties (use of WebappResourceLoader instead of FileResourceLoader)
@@ -556,7 +567,7 @@ public class PaperControlImpl implements PaperControl {
                 }
                 else if(chapterContent.get(j) instanceof Graphic) {
 
-                    output = output + "\\begin{figure}[t]\n"
+                    output = output + "\\begin{figure}[ht]\n"
                                     +   "\t\\centering\n"
                                     +   "\t\\includegraphics[scale=" + Utilities.calcScalingFactor(((Graphic)chapterContent.get(j)).getHeight(), ((Graphic)chapterContent.get(j)).getWidth()) + "]{" + chapterContent.get(j).getTitle().replaceAll(" ", "_") + "}\n"
                                     +   "\t\\caption{" + chapterContent.get(j).getTitle() + "}\n"

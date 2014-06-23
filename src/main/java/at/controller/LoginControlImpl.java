@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.controller;
@@ -30,7 +30,7 @@ import org.springframework.stereotype.Controller;
 
 @Controller("loginControl")
 @Scope("session")
-public class LoginControlImpl {
+public class LoginControlImpl implements LoginControl {
 
     private static org.apache.log4j.Logger log = Logger.getLogger(LoginControlImpl.class);
     
@@ -51,7 +51,7 @@ public class LoginControlImpl {
         log.info("JSF-Version: " + FacesContext.class.getPackage().getImplementationVersion());
     }
 
-    
+    @Override
     public String login() {
         
         this.author = this.authorService.getRegisteredAuthor(this.matnr);
@@ -63,7 +63,7 @@ public class LoginControlImpl {
                 if (this.password.equals(this.author.getPassword())) {
 
                     this.paperControl.setAuthor(this.author);
-                    this.author.setIsUsedNow(true);
+                    //this.author.setIsUsedNow(true);
                     this.paperControl.initPaperPosNr();
                     this.paperControl.saveAll();
 
@@ -74,19 +74,17 @@ public class LoginControlImpl {
         return "index?faces-redirect=true";
     }
     
-    
+    @Override
     public String logout() {
         
         HttpServletRequest hsr = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        
-        String uri = hsr.getRequestURI();
-         
+                 
         if(this.paperControl.getCurrentPaper() != null && this.paperControl.getCurrentPaper().getTitle() == null) {
             
             this.paperControl.removeCurrentPaper();
         }
         
-        this.author.setIsUsedNow(false);
+        //this.author.setIsUsedNow(false); 
         this.paperControl.saveAll();
         
         
@@ -100,6 +98,7 @@ public class LoginControlImpl {
         return "index";
     }
     
+    @Override
     public boolean testDBConnection() {
         
         try {

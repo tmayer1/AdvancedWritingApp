@@ -12,92 +12,37 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.controller;
 
-import at.model.Author;
-import at.service.AuthorService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Controller;
 
-
-@Controller
-@Scope("request")
-public class RegisterControl {
-
-    private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(RegisterControl.class);
-    
-    private Author newAuthor;
-        
-    @Autowired
-    private AuthorService authorService;
-    
-    private boolean registrationSuccessful;
-    
-    private boolean authorAlreadyRegistered;
-
-    /**
-     * Creates a new instance of RegisterControl
-     */
-    public RegisterControl() {
-        
-        this.newAuthor = new Author();
-        
-        this.registrationSuccessful = false;
-        this.authorAlreadyRegistered = false;
-        
-        log.info("RegisterControl wurde instanziert...");
-    }
-
-    public String register() {
-        
-        boolean success = this.authorService.addAuthor(this.newAuthor);
-
-        if (success == true) {
-            registrationSuccessful = true;
-        } else {
-            authorAlreadyRegistered = true;
-        }
-        return "register";
-    }
-
-    /**
-     * @return the newAuthor
-     */
-    public Author getNewAuthor() {
-        return newAuthor;
-    }
-
-    /**
-     * @param newAuthor the newAuthor to set
-     */
-    public void setNewAuthor(Author newAuthor) {
-        this.newAuthor = newAuthor;
-    }
+/**
+ * Interface for a controller used to handle the registration process.
+ * In more specific that means that implementations of the interface are 
+ * able to save authors into the database as part of the registration 
+ * (request-scoped).
+ * 
+ * 
+ * @author Thomas Mayer
+ */
+public interface RegisterControl {
     
     /**
-     * @return the registrationsuccessful
+     * Creates a new paper for a specific author.
+     * <p>
+     * Precondition: An Author must already exist 
+     * (PaperControlImpl.author != null).
+     * <p>
+     * Postcondition: One paper for a specific author has been created 
+     * (PaperControlImpl.author.papers.size++).
+     * <p>
+     * Invariants: DB-state (nothing is written to the DB)
+     * 
+     * @return 
      */
-    public boolean isRegistrationSuccessful() {
-        return this.registrationSuccessful;
-    }
-
-    /**
-     * @param registrationsuccessful the registrationsuccessful to set
-     */
-    public void setRegistrationSuccessful(boolean registrationSuccessful) {
-        this.registrationSuccessful = registrationSuccessful;
-    }
-
+    public String register();
+  
     
-    public boolean isAuthorAlreadyRegistered() {
-        return this.authorAlreadyRegistered;
-    }
-
-    public void setAuthorAlreadyRegistered(boolean authorAlreadyRegistered) {
-        this.authorAlreadyRegistered = authorAlreadyRegistered;
-    }
 }

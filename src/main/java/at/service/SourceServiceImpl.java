@@ -23,78 +23,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+// Service not used in application
+
 @Service
 public class SourceServiceImpl implements SourceService {
 
     @Autowired
     private SourceDAO sourceDAO;
-        
-    /*@Override
-    public boolean addAuthor(Author author) {
-        
-        Author newAuthor = this.authorDAO.findById(author.getMatnr());
-        
-        if(newAuthor == null) {
-            this.authorDAO.create(author);
-            return true;
-        }
-        else {
-           return false;
-        }
-    }
-    
-    @Override
-    public void removeAuthor(Author autor) {
-        
-        this.authorDAO.delete(autor);
-    }
-
-    @Override
-    public Author getRegisteredAuthor(String matnr) {
-        
-        return this.authorDAO.findById(matnr);
-    }
-
-    @Override
-    public Author updateAuthor(Author author) {
-        
-        //JPA/Hibernate - Implementation
-
-        if (this.authorStates.size() > 0) {
-
-            Author oldAuthorStateManaged = this.authorDAO.findById(this.authorStates.get(this.authorStates.size() - 1).getMatnr());
-           
-            //same author?
-            if (oldAuthorStateManaged.getMatnr().equals(author.getMatnr())) {
-                
-                //semantic equals (are there any changes?)
-                if (!oldAuthorStateManaged.equals(author)) {
-                    //remove last authorState (delete already existing author in DB)
-                    this.authorDAO.delete(oldAuthorStateManaged);
-                } 
-                else {
-                    return null;
-                }
-            }
-        }
-
-        //save current authorState
-        try {
-
-            Author currentAuthorState = (Author) Utilities.deepCopy(author);
-
-            this.authorStates.add(currentAuthorState);
-        } 
-        catch (Exception ex) {
-            Logger.getLogger(SourceServiceImpl.class.getName()).log(Level.SEVERE, "AuthorState konnte nicht gespeichert werden (tiefe Kopie)...");
-        }
-
-
-        //create currentAuthorStateManaged and save after transaction ends
-        Author currentAuthorStateManaged = this.authorDAO.update(author);
-        
-        return currentAuthorStateManaged;
-    }*/
 
     public boolean addSource(Source source) {
         

@@ -52,11 +52,9 @@ public class FileValidator implements Validator {
          */
 
         if (part.getContentType().equals("application/octet-stream")) {
-            if (FileValidator.safedPart == null || part == null) {
-                
-                FacesMessage message = new FacesMessage(ResourceBundle.getBundle("i18n").getString("nofileselected"));
-                throw new ValidatorException(message);
-            }
+
+            FacesMessage message = new FacesMessage(ResourceBundle.getBundle("i18n").getString("nofileselected"));
+            throw new ValidatorException(message);
         }
         else {
             this.validateFileType(part);

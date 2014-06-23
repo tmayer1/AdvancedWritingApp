@@ -24,6 +24,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ResourceBundle;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -64,6 +67,11 @@ public class ImageServlet implements HttpRequestHandler {
         Author author = this.authorService.getRegisteredAuthor(parameterMatnr);
 
         if (author == null) {
+            
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, ResourceBundle.getBundle("i18n").getString("imageloadfirsttime"), "");
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, message);
+            
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
             return;
         }

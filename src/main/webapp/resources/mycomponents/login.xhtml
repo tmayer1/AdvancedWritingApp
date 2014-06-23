@@ -33,16 +33,19 @@
 
     <!-- IMPLEMENTATION -->
     <composite:implementation>
-        <h:form id="form">
-            <h:panelGrid>
-                <h:outputLabel value="#{msg.matnr}" for="matnr"/>
-                <h:inputText id="matnr" value="#{cc.attrs.matnr}" tabindex="1"/>
-                
-                <h:outputLabel value="#{msg.password}" for="password"/>
-                <h:inputSecret id="password" value="#{cc.attrs.password}" tabindex="2"/>
-                
-                <h:commandButton id="submit" value="#{msg.login}" action="#{cc.attrs.action}"/>
-            </h:panelGrid>
-        </h:form>
+        <fieldset>
+            <legend>Login</legend>
+            <h:form id="form">
+                <h:panelGrid>
+                    <h:outputLabel value="#{msg.matnr}" for="matnr"/>
+                    <h:inputText id="matnr" value="#{cc.attrs.matnr}" tabindex="1"/>
+
+                    <h:outputLabel value="#{msg.password}" for="password"/>
+                    <h:inputSecret id="password" value="#{cc.attrs.password}" tabindex="2"/>
+
+                    <h:commandButton id="submit" value="#{msg.login}" action="#{cc.attrs.action}"/>
+                </h:panelGrid>
+            </h:form>
+        </fieldset>
     </composite:implementation>
 </html>

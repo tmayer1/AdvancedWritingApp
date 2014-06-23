@@ -239,7 +239,10 @@ public class Chapter implements Serializable {
                     }
                     else {
                         
-                        // TODO: Graphic sauber loeschen
+                        if (((Graphic)tempChapterContent).getImage() != null) {
+                            
+                            this.clearGraphicData(title);
+                        }
                         
                         this.graphicPosNr = this.graphicPosNr - 1;
                     }
@@ -262,6 +265,23 @@ public class Chapter implements Serializable {
             if(tempChapterContent.getTitle().equals(paragraphTitle)) {
                 
                 ((Paragraph)tempChapterContent).setContent(null);
+            }
+        }
+    }
+    
+    // helper-function for clean removing of a graphic
+    private void clearGraphicData(String graphicTitle) {
+        
+        for (ChapterContent tempChapterContent : this.chapterContents) {
+
+            if(tempChapterContent.getTitle().equals(graphicTitle)) {
+                
+                tempChapterContent.setChapter(null);
+                tempChapterContent.setTitle(null);
+                ((Graphic)tempChapterContent).setFile(null);
+                ((Graphic)tempChapterContent).setImage(null);
+                ((Graphic)tempChapterContent).setType(null);
+                break;
             }
         }
     }
