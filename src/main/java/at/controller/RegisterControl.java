@@ -30,17 +30,15 @@ package at.controller;
 public interface RegisterControl {
     
     /**
-     * Creates a new paper for a specific author.
+     * Registers an author with specific information.
      * <p>
-     * Precondition: An Author must already exist 
-     * (PaperControlImpl.author != null).
+     * Precondition: An author with the same registrationnumber is not 
+     * registered yet (not saved in DB).
      * <p>
-     * Postcondition: One paper for a specific author has been created 
-     * (PaperControlImpl.author.papers.size++).
-     * <p>
-     * Invariants: DB-state (nothing is written to the DB)
+     * Postcondition: The registered <code>Author</code>-instance is written to 
+     * the DB.
      * 
-     * @return 
+     * @return the URL of the current page (register, no page change)
      */
     public String register();
   

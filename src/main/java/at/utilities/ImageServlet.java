@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.utilities;
@@ -35,6 +35,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.HttpRequestHandler;
 
+/**
+ * Servlet which loads an image from the database and then streams the image to 
+ * the HttpServletResponse.
+ * The Servlet has to be also defined in the Web Deployment Descriptor web.xml.
+ * 
+ * @author Thomas Mayer
+ */
 @Component("imageServlet")
 public class ImageServlet implements HttpRequestHandler {
 
@@ -42,7 +49,8 @@ public class ImageServlet implements HttpRequestHandler {
     private AuthorService authorService;
 
     public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-                // Get parameters from request.
+                
+        // Get parameters from request.
         String parameterMatnr = request.getParameter("matnr");
         String parameterPaperTitle = request.getParameter("papertitle");
         String parameterGraphicTitle = request.getParameter("graphictitle");
@@ -52,18 +60,18 @@ public class ImageServlet implements HttpRequestHandler {
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
             return;
         }
-        // Check if 'parameterMatnr' is supplied to the request.
+        // Check if 'parameterPaperTitle' is supplied to the request.
         if (parameterPaperTitle == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
             return;
         }
-        // Check if 'parameterMatnr' is supplied to the request.
+        // Check if 'parameterGraphicTitle' is supplied to the request.
         if (parameterGraphicTitle == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404.
             return;
         }
 
-        //DB
+        // DB
         Author author = this.authorService.getRegisteredAuthor(parameterMatnr);
 
         if (author == null) {

@@ -33,7 +33,7 @@ public interface PaperControl {
     /**
      * Creates a new paper for a specific author.
      * <p>
-     * Precondition: An Author must already exist 
+     * Precondition: An author must already exist 
      * (PaperControlImpl.author != null).
      * <p>
      * Postcondition: One paper for a specific author has been created 
@@ -41,7 +41,8 @@ public interface PaperControl {
      * <p>
      * Invariants: DB-state (nothing is written to the DB)
      * 
-     * @return 
+     * @return the URL of the title-creation-page, otherwise the portfolio-page 
+     * URL
      */
     public String createPaper();
 
@@ -49,7 +50,7 @@ public interface PaperControl {
     /**
      * Edits an already existing paper (sets author's current paper).
      * <p>
-     * Precondition: An Author must already exist 
+     * Precondition: An author must already exist 
      * (PaperControlImpl.author != null).
      * <br/>
      * Precondition: title != null
@@ -64,7 +65,8 @@ public interface PaperControl {
      * 
      * @param title the title of the paper which has to be set as current paper
      * 
-     * @return 
+     * @return the URL of the documentlayer-page, otherwise the portfolio-page 
+     * URL
      */
     public String editPaper(String title);
     

@@ -23,7 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-
+/**
+ * Implementation of the <code>RegisterControl</code>-interface.
+ * 
+ * 
+ * @author Thomas Mayer
+ */
 @Controller
 @Scope("request")
 public class RegisterControlImpl implements RegisterControl {

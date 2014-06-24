@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.model;
@@ -27,6 +27,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+/**
+ * This class represents a JPA-entity.
+ * It is used for ORM. For more information about the whole data-model have a 
+ * look at the ER-diagram.
+ * 
+ * 
+ * @author Thomas Mayer
+ */
 @Entity
 @Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 public abstract class ChapterContent {

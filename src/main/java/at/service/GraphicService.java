@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.service;
@@ -20,7 +20,14 @@ package at.service;
 import at.model.Graphic;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * Interface for a service used to deal with instances of <code>Graphic</code> 
+ * (business logic).
+ * Not used in this prototype!
+ * 
+ * 
+ * @author Thomas Mayer
+ */
 public interface GraphicService {
     
     @Transactional

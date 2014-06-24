@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.utilities;
@@ -33,10 +33,15 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 import org.apache.commons.io.FileUtils;
 
+/**
+ * Helper class for different purposes.
+ * 
+ * 
+ * @author Thomas Mayer
+ */
 public class Utilities {
 
     private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(Utilities.class);
@@ -219,7 +224,7 @@ public class Utilities {
     }
     
     
-    //copies all the necessary files for the laTeX-output (style-files, figures, ...)
+    // copies all the necessary files for the laTeX-output (style-files, figures, ...)
     public static boolean prepareForExport(String destFolderName) {
         
         ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
@@ -345,7 +350,7 @@ public class Utilities {
         }
     }
     
-    // create temporary zip-file (will be deleted after finishing export)
+    // creates temporary zip-file (will be deleted after finishing export)
     public static void createZipfileFromFolder(String srcFolderPath, String targetPath) {
 
         FileOutputStream fos = null;

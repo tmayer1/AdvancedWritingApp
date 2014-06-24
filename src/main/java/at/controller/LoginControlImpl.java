@@ -28,6 +28,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+/**
+ * Implementation of the <code>LoginControl</code>-interface.
+ * 
+ * 
+ * @author Thomas Mayer
+ */
 @Controller("loginControl")
 @Scope("session")
 public class LoginControlImpl implements LoginControl {
@@ -54,6 +60,7 @@ public class LoginControlImpl implements LoginControl {
     @Override
     public String login() {
         
+        // is the author already registered
         this.author = this.authorService.getRegisteredAuthor(this.matnr);
         
         if (this.author != null) {

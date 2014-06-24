@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.utilities;
@@ -26,19 +26,24 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import javax.servlet.http.Part;
 
-
+/**
+ * Validator class for checking graphic formats (MIME types).
+ * Allowed MIME types: image/jpeg, image/png
+ * 
+ * @author Thomas Mayer
+ */
 @FacesValidator("FileValidator")
 public class FileValidator implements Validator {
  
     private static Part safedPart = null;
     
+    
     @Override
     public void validate(FacesContext context, UIComponent uiComponent, Object value) throws ValidatorException {
  
         Part part = (Part) value;
- 
         
-        /* 1. validate file name length 
+        /* validate file name length 
         String fileName = getFileName(part);
         System.out.println("----- validator fileName: " + fileName);
         if(fileName.length() == 0 ) {
@@ -58,12 +63,12 @@ public class FileValidator implements Validator {
         }
         else {
             this.validateFileType(part);
-            //ACCEPTED
+            // ACCEPTED
             FileValidator.safedPart = part;
         }
         
 
-        /* 3. validate file size (should not be greater than 512 bytes)
+        /* validate file size (should not be greater than 512 bytes)
          if (part.getSize() > 512) {
          FacesMessage message = new FacesMessage("Error: File size is too big !!");
          throw new ValidatorException(message);

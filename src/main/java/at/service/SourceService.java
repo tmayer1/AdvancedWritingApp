@@ -21,7 +21,14 @@ import at.model.Source;
 import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
 
-
+/**
+ * Interface for a service used to deal with instances of <code>Source</code> 
+ * (business logic).
+ * Not used in this prototype!
+ * 
+ * 
+ * @author Thomas Mayer
+ */
 public interface SourceService {
     
     @Transactional

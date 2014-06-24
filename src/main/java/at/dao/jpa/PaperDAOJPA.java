@@ -21,7 +21,10 @@ import at.dao.PaperDAO;
 import at.model.Paper;
 import org.springframework.stereotype.Repository;
 
-
+/**
+ * 
+ * @author Thomas Mayer
+ */
 @Repository
 public class PaperDAOJPA extends GenericDAOJPA<Paper, Integer> implements PaperDAO{
     

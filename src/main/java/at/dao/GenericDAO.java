@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.dao;
@@ -21,10 +21,11 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Interface for a controller used to handle the registration process.
+ * Generic "Data Access Object" interface which defines CRUD operations for a 
+ * generic type E.
  * In more specific that means that implementations of the interface are 
- * able to save authors into the database as part of the registration 
- * (request-scoped).
+ * able to do CRUD operations (create, read, update, delete) on different 
+ * entities.
  * 
  * 
  * @author Thomas Mayer

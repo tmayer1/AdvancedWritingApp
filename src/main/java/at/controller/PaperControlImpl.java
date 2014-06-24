@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.controller;
@@ -54,12 +54,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+/**
+ * Implementation of the <code>PaperControl</code>-interface.
+ * 
+ * 
+ * @author Thomas Mayer
+ */
 @Controller("paperControl")
 @Scope("session")
 public class PaperControlImpl implements PaperControl {
 
     private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(PaperControlImpl.class);
 
+    // not used (papers are safed within an author-object)
     @Autowired
     private PaperService paperService;
 
@@ -221,11 +228,13 @@ public class PaperControlImpl implements PaperControl {
         return "documentlayer?faces-redirect=true";
     }
 
+    // not used (papers are safed within an author-object)
     public List<Paper> getAllPapers() {
 
         return this.paperService.getAllPapers();
     }
 
+    // not used (papers are safed within an author-object)
     public List<Paper> getPapersByAuthorFromDB() {
 
         if (this.author != null) {

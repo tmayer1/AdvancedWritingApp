@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.dao.jpa;
@@ -25,8 +25,13 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 
-// JPA-Implementation of the GenericDAO-Interface
-
+/**
+ * JPA implementation of the <code>GenericDAO</code>-interface.
+ * This class offers CRUD operations for a generic type E.
+ * 
+ * 
+ * @author Thomas Mayer
+ */
 public abstract class GenericDAOJPA<E, ID extends Serializable> implements GenericDAO<E, ID> {
     
     private static org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(GenericDAOJPA.class);

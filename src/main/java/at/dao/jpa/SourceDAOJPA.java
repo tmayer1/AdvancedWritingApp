@@ -12,7 +12,7 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with Advanced Writing App.  If not, see <http://www.gnu.org/licenses/>.
+    along with Advanced Writing App. If not, see <http://www.gnu.org/licenses/>.
  */
 
 package at.dao.jpa;
@@ -21,7 +21,10 @@ import at.dao.SourceDAO;
 import at.model.Source;
 import org.springframework.stereotype.Repository;
 
-
+/**
+ * 
+ * @author Thomas Mayer
+ */
 @Repository
 public class SourceDAOJPA extends GenericDAOJPA<Source, Integer> implements SourceDAO {
     

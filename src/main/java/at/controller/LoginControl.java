@@ -19,7 +19,7 @@ package at.controller;
 
 
 /**
- * Interface for a controller used to handle the login-process.
+ * Interface for a controller used to handle the login process.
  * In more specific that means that implementations of the interface are 
  * able to process login- and logout-actions on a specific 
  * <code>Author</code>-instance (session-scoped). Furthermore, there is a method
@@ -31,57 +31,35 @@ package at.controller;
 public interface LoginControl {
     
     /**
-     * Creates a new paper for a specific author.
+     * Do a login for a specific author.
      * <p>
-     * Precondition: An Author must already exist 
-     * (PaperControlImpl.author != null).
-     * <p>
-     * Postcondition: One paper for a specific author has been created 
-     * (PaperControlImpl.author.papers.size++).
+     * Precondition: An author must already exist in the DB.
      * <p>
      * Invariants: DB-state (nothing is written to the DB)
      * 
-     * @return 
+     * @return the URL of the portfolio, otherwise the URL of the index-page
      */
     public String login();
 
     
     /**
-     * Edits an already existing paper (sets author's current paper).
+     * Do a logout for a specific author.
      * <p>
-     * Precondition: An Author must already exist 
-     * (PaperControlImpl.author != null).
+     * Precondition: An Author must already be logged in.
+     * <p>
+     * Postcondition: Session data is cleared.
      * <br/>
-     * Precondition: title != null
-     * <br/>
-     * Precondition: The paper to edit must already exist in author's paperlist
-     * (PaperControlImpl.author.getPaper(title) != null).
-     * <p>
-     * Postcondition: One paper of a specific author is set as current paper 
-     * (PaperControlImpl.currentPaper).
-     * <p>
-     * Invariants: DB-state (nothing is written to the DB)
+     * Postcondition: All author specific data have been saved into the DB.
      * 
-     * @return 
+     * @return the URL of the index-page
      */
     public String logout();
     
     
     /**
-     * Deletes an already existing paper from author's papers 
-     * (PaperControlImpl.author.papers).
+     * Tests whether a connection to the DB is given.
      * <p>
-     * Precondition: An author must already exist 
-     * (PaperControlImpl.author != null).
-     * <br/>
-     * Precondition: title != null
-     * <br/>
-     * Precondition: The paper to remove must already exist in author's 
-     * paperlist
-     * (PaperControlImpl.author.getPaper(title) != null).
-     * <p>
-     * Postcondition: One paper has been removed from authors' paperlist 
-     * (PaperControlImpl.author.papers.size--).
+     * Invariants: DB-state (nothing is written to the DB)
      * 
      * @return true if the test is successful, false otherwise
      */
