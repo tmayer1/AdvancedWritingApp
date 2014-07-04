@@ -123,7 +123,7 @@ public class Paper implements Serializable {
         
         Chapter newChapter = new Chapter();
         newChapter.setSection(section);
-        newChapter.setTitle(ResourceBundle.getBundle("i18n").getString("newchapter") + " " + nr);
+        newChapter.setTitle(ResourceBundle.getBundle("i18n").getString("chapter") + " " + nr);
         newChapter.initChapter(nr);
         newChapter.setPaper(this);
         

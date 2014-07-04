@@ -29,7 +29,7 @@ import org.springframework.stereotype.Controller;
  * 
  * @author Thomas Mayer
  */
-@Controller
+@Controller("registerControl")
 @Scope("request")
 public class RegisterControlImpl implements RegisterControl {
 
